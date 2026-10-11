@@ -1,0 +1,17 @@
+services:
+  portfolio:
+    build: .
+    container_name: deivid-portfolio
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - portfolio-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/portfolio.db
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-deivid-admin-2026}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-dev-only-secret-change-in-production}
+
+volumes:
+  portfolio-data:

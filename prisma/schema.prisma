@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Portfolio persistence layer
+// ---------------------------------------------------------------------------
+
+/// Page views counter — survives server restarts (replaces the in-memory map).
+model ProjectView {
+  slug    String @id
+  views   Int    @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+/// Per-view event log for real time-series analytics (one row per view).
+model ViewEvent {
+  id        String   @id @default(cuid())
+  slug      String   // project slug
+  createdAt DateTime @default(now())
+
+  @@index([slug])
+  @@index([createdAt])
+}
+
+/// Contact messages submitted through the contact form.
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  ticket    String   @unique
+  createdAt DateTime @default(now())
+}
+
+/// Newsletter subscribers.
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  active    Boolean  @default(true)
+}
+
+/// Blog/devlog posts shown in the Updates section. Seeded from content.ts.
+model Update {
+  slug      String   @id
+  title     String
+  excerpt   String
+  body      String   // newline-separated paragraphs
+  date      DateTime
+  category  String   // release | devlog | case-study | announcement
+  tags      String   // comma-separated
+  project   String?
+  readTime  Int      @default(2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Testimonials shown in the carousel. Seeded from content.ts.
+model Testimonial {
+  id             String   @id @default(cuid())
+  name           String
+  role           String
+  company        String
+  quote          String
+  rating         Int      @default(5)
+  avatarInitials String
+  accent         String
+  project        String?
+  createdAt      DateTime @default(now())
+}
+
+/// Dynamic projects (so new apps can be added from the admin without code).
+/// Seeded from projects.ts on first read. After that the DB is the source of truth.
+model ProjectRow {
+  slug          String   @id
+  name          String
+  tagline       String
+  category      String
+  status        String   // live | beta | maintenance
+  year          String
+  url           String
+  accent        String
+  icon          String
+  screenshot    String
+  summary       String
+  description   String
+  longDescription String
+  features      String   // JSON string of [{title,description}]
+  metrics       String   // JSON string of [{label,value}]
+  techStack     String   // JSON string of [{name,category}]
+  highlights    String   // JSON string of string[]
+  audience      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Keep legacy models for backwards compatibility with the scaffold.
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

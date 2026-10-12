@@ -35,8 +35,8 @@ export function Footer() {
               deivid<span className="text-primary">.tech</span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
-              Soluciono problemas reales de empresas con software que funciona.
-              No vendo humo, entrego sistemas en producción.
+              Resuelvo problemas reales con software que funciona.
+              Sin humo. Sistemas en producción, listos para usar.
             </p>
             <p className="mt-3 text-xs text-muted-foreground">
               {t.about.location}

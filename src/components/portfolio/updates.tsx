@@ -305,7 +305,7 @@ function UpdateModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-2xl gap-0 overflow-hidden p-0">
+      <DialogContent className="max-h-[90vh] max-w-2xl gap-0 overflow-hidden p-0">
         <AnimatePresence>
           {post && (
             <motion.div
@@ -343,7 +343,7 @@ function UpdateModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="max-h-[60vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
+              <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
                 <div className="space-y-4 py-4">
                   {post.body.map((para, idx) => (
                     <p

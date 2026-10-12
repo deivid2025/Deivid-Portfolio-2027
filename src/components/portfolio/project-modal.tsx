@@ -111,7 +111,7 @@ export function ProjectModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[92vh] max-w-3xl gap-0 overflow-hidden p-0 sm:max-w-3xl">
+      <DialogContent className="max-h-[90vh] max-w-3xl gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <AnimatePresence>
           {project && (
             <motion.div
@@ -157,7 +157,7 @@ export function ProjectModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="max-h-[60vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
+              <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
                 <div className="space-y-6 py-4">
                   {/* Quick facts */}
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

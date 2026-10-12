@@ -84,10 +84,10 @@ const STATUSES = [
 ];
 
 const ACCENTS = [
-  { value: "from-amber-500 via-orange-500 to-rose-500", label: "Ámbar/Naranja" },
+  { value: "from-zinc-600 via-zinc-700 to-zinc-900", label: "Gris" },
   { value: "from-rose-600 via-red-600 to-orange-600", label: "Rojo/Naranja" },
-  { value: "from-emerald-500 via-teal-500 to-cyan-600", label: "Esmeralda/Cian" },
-  { value: "from-violet-500 via-purple-500 to-fuchsia-600", label: "Violeta" },
+  { value: "from-zinc-500 via-zinc-600 to-zinc-700", label: "Claro" },
+  { value: "from-zinc-800 via-zinc-900 to-black", label: "Oscuro" },
 ];
 
 const ICONS = [
@@ -112,7 +112,7 @@ export function ProjectFormDialog({ open, initial, onClose }: Props) {
     status: "live",
     year: String(new Date().getFullYear()),
     url: "",
-    accent: "from-amber-500 via-orange-500 to-rose-500",
+    accent: "from-zinc-600 via-zinc-700 to-zinc-900",
     icon: "Rocket",
     screenshot: "/screenshots/despega-peelme.png",
     summary: "",
@@ -149,7 +149,7 @@ export function ProjectFormDialog({ open, initial, onClose }: Props) {
         status: "live",
         year: String(new Date().getFullYear()),
         url: "",
-        accent: "from-amber-500 via-orange-500 to-rose-500",
+        accent: "from-zinc-600 via-zinc-700 to-zinc-900",
         icon: "Rocket",
         screenshot: "/screenshots/despega-peelme.png",
         summary: "",

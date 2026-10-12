@@ -47,7 +47,7 @@ const CATEGORY_META: Record<
   },
   "case-study": {
     label: "Caso de estudio",
-    className: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+    className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   },
   announcement: {
     label: "Anuncio",
@@ -122,7 +122,7 @@ export function Updates() {
     },
     "case-study": {
       label: t.updates.categories["case-study"],
-      className: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
     announcement: {
       label: t.updates.categories.announcement,
@@ -291,7 +291,7 @@ function UpdateModal({
     },
     "case-study": {
       label: t.updates.categories["case-study"],
-      className: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
     announcement: {
       label: t.updates.categories.announcement,

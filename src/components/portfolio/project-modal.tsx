@@ -38,7 +38,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   backend: "bg-foreground/10 text-foreground border-foreground/20",
   database: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   infra: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
-  ai: "bg-violet-500/10 text-violet-400 border-violet-500/30",
+  ai: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   tooling: "bg-muted text-muted-foreground border-border",
 };
 

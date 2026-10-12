@@ -46,8 +46,8 @@ const ACCENTS = [
   { value: "from-zinc-600 to-zinc-800", label: "Zinc" },
   { value: "from-zinc-500 to-zinc-700", label: "Gris" },
   { value: "from-zinc-700 to-zinc-900", label: "Oscuro" },
-  { value: "from-violet-500 to-purple-600", label: "Violeta" },
-  { value: "from-cyan-500 to-blue-500", label: "Cian" },
+  { value: "from-zinc-800 to-black", label: "Negro" },
+  { value: "from-zinc-500 to-zinc-700", label: "Gris" },
 ];
 
 export function TestimonialFormDialog({ open, initial, onClose }: Props) {

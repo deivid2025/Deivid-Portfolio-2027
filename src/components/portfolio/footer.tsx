@@ -119,7 +119,7 @@ export function Footer() {
             © {new Date().getFullYear()} {profile.brand}. {t.footer.rights}
           </div>
           <div className="flex items-center gap-1.5">
-            {t.footer.madeWith} <Heart className="h-3.5 w-3.5 text-rose-500" />
+            {t.footer.madeWith} <Heart className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
           <Link
             href="/admin"

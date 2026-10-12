@@ -50,10 +50,10 @@ const CATEGORIES = [
 ];
 
 const ACCENTS = [
-  { value: "from-amber-500 to-orange-600", label: "Ámbar" },
-  { value: "from-emerald-500 to-teal-600", label: "Esmeralda" },
-  { value: "from-rose-500 to-red-600", label: "Rosa" },
-  { value: "from-violet-500 to-purple-600", label: "Violeta" },
+  { value: "from-zinc-600 to-zinc-800", label: "Gris" },
+  { value: "from-zinc-500 to-zinc-700", label: "Claro" },
+  { value: "from-zinc-700 to-zinc-900", label: "Oscuro" },
+  { value: "from-zinc-800 to-black", label: "Negro" },
 ];
 
 export function UpdateFormDialog({ open, initial, onClose }: Props) {

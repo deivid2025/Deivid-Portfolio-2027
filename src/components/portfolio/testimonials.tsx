@@ -120,7 +120,7 @@ export function Testimonials() {
                       className={cn(
                         "h-4 w-4",
                         i < active.rating
-                          ? "fill-amber-400 text-amber-400"
+                          ? "fill-foreground text-foreground"
                           : "text-muted-foreground/40",
                       )}
                     />

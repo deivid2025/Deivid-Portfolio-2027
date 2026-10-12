@@ -69,11 +69,11 @@ export function Hero() {
         />
         <motion.div
           style={{ y: auroraY2 }}
-          className="absolute right-10 top-40 h-72 w-72 rounded-full bg-emerald-500/20 blur-[100px] animate-float-slow [animation-delay:-6s]"
+          className="absolute right-10 top-40 h-72 w-72 rounded-full bg-foreground/10 blur-[100px] animate-float-slow [animation-delay:-6s]"
         />
         <motion.div
           style={{ y: auroraY3 }}
-          className="absolute left-6 top-60 h-56 w-56 rounded-full bg-rose-500/15 blur-[100px] animate-float-slow [animation-delay:-3s]"
+          className="absolute left-6 top-60 h-56 w-56 rounded-full bg-foreground/5 blur-[100px] animate-float-slow [animation-delay:-3s]"
         />
       </div>
 

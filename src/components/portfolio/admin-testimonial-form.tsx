@@ -43,9 +43,9 @@ interface Props {
 }
 
 const ACCENTS = [
-  { value: "from-amber-500 to-orange-600", label: "Ámbar" },
-  { value: "from-emerald-500 to-teal-600", label: "Esmeralda" },
-  { value: "from-rose-500 to-red-600", label: "Rosa" },
+  { value: "from-zinc-600 to-zinc-800", label: "Zinc" },
+  { value: "from-zinc-500 to-zinc-700", label: "Gris" },
+  { value: "from-zinc-700 to-zinc-900", label: "Oscuro" },
   { value: "from-violet-500 to-purple-600", label: "Violeta" },
   { value: "from-cyan-500 to-blue-500", label: "Cian" },
 ];
@@ -60,7 +60,7 @@ export function TestimonialFormDialog({ open, initial, onClose }: Props) {
   const [quote, setQuote] = React.useState("");
   const [rating, setRating] = React.useState("5");
   const [avatarInitials, setAvatarInitials] = React.useState("");
-  const [accent, setAccent] = React.useState("from-amber-500 to-orange-600");
+  const [accent, setAccent] = React.useState("from-zinc-600 to-zinc-800");
   const [project, setProject] = React.useState("");
 
   React.useEffect(() => {
@@ -71,7 +71,7 @@ export function TestimonialFormDialog({ open, initial, onClose }: Props) {
       setQuote(initial?.quote ?? "");
       setRating(String(initial?.rating ?? 5));
       setAvatarInitials(initial?.avatarInitials ?? "");
-      setAccent(initial?.accent ?? "from-amber-500 to-orange-600");
+      setAccent(initial?.accent ?? "from-zinc-600 to-zinc-800");
       setProject(initial?.project ?? "");
     }
   }, [open, initial]);
@@ -238,7 +238,7 @@ export function TestimonialFormDialog({ open, initial, onClose }: Props) {
                       key={i}
                       className={
                         i < Number(rating)
-                          ? "h-4 w-4 fill-amber-400 text-amber-400"
+                          ? "h-4 w-4 fill-foreground text-foreground"
                           : "h-4 w-4 text-muted-foreground/40"
                       }
                     />

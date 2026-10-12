@@ -167,7 +167,7 @@ export function ProjectComparison() {
                             return (
                               <div key={p.slug} className="flex items-center gap-1.5 px-1">
                                 {has ? (
-                                  <Check className="h-3 w-3 shrink-0 text-emerald-500" />
+                                  <Check className="h-3 w-3 shrink-0 text-foreground" />
                                 ) : (
                                   <Minus className="h-3 w-3 shrink-0 text-muted-foreground/40" />
                                 )}
@@ -288,8 +288,8 @@ function CompareColumn({
           className={cn(
             "rounded border px-1.5 py-0.5",
             project.status === "live"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
-              : "border-amber-500/30 bg-amber-500/10 text-amber-500",
+              ? "border-foreground/20 bg-foreground/10 text-foreground"
+              : "border-muted-foreground/20 bg-muted-foreground/10 text-muted-foreground",
           )}
         >
           {project.status === "live" ? "En vivo" : "Beta"}

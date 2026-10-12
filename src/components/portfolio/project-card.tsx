@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/projects";
 
 const STATUS_STYLE: Record<Project["status"], string> = {
-  live: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
-  beta: "bg-amber-500/15 text-amber-500 border-amber-500/30",
+  live: "bg-foreground/10 text-foreground border-foreground/20",
+  beta: "bg-muted-foreground/15 text-muted-foreground border-muted-foreground/30",
   maintenance: "bg-muted text-muted-foreground border-border",
 };
 

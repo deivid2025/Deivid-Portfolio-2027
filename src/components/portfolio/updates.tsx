@@ -39,11 +39,11 @@ const CATEGORY_META: Record<
 > = {
   release: {
     label: "Release",
-    className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+    className: "bg-foreground/10 text-foreground border-foreground/20",
   },
   devlog: {
     label: "Devlog",
-    className: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+    className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   },
   "case-study": {
     label: "Caso de estudio",
@@ -51,7 +51,7 @@ const CATEGORY_META: Record<
   },
   announcement: {
     label: "Anuncio",
-    className: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+    className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   },
 };
 
@@ -114,11 +114,11 @@ export function Updates() {
   > = {
     release: {
       label: t.updates.categories.release,
-      className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+      className: "bg-foreground/10 text-foreground border-foreground/20",
     },
     devlog: {
       label: t.updates.categories.devlog,
-      className: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
     "case-study": {
       label: t.updates.categories["case-study"],
@@ -126,7 +126,7 @@ export function Updates() {
     },
     announcement: {
       label: t.updates.categories.announcement,
-      className: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
   };
 
@@ -283,11 +283,11 @@ function UpdateModal({
   > = {
     release: {
       label: t.updates.categories.release,
-      className: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+      className: "bg-foreground/10 text-foreground border-foreground/20",
     },
     devlog: {
       label: t.updates.categories.devlog,
-      className: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
     "case-study": {
       label: t.updates.categories["case-study"],
@@ -295,7 +295,7 @@ function UpdateModal({
     },
     announcement: {
       label: t.updates.categories.announcement,
-      className: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+      className: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
     },
   };
   return (

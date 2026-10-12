@@ -35,9 +35,9 @@ import { projects as allProjects, type Project } from "@/lib/projects";
 
 const CATEGORY_COLORS: Record<string, string> = {
   frontend: "bg-primary/10 text-primary border-primary/30",
-  backend: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
-  database: "bg-amber-500/10 text-amber-500 border-amber-500/30",
-  infra: "bg-rose-500/10 text-rose-500 border-rose-500/30",
+  backend: "bg-foreground/10 text-foreground border-foreground/20",
+  database: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
+  infra: "bg-muted-foreground/10 text-muted-foreground border-muted-foreground/20",
   ai: "bg-violet-500/10 text-violet-400 border-violet-500/30",
   tooling: "bg-muted text-muted-foreground border-border",
 };
@@ -323,7 +323,7 @@ export function ProjectModal({
                 >
                   {copied ? (
                     <>
-                      <Check className="mr-1 h-3 w-3 text-emerald-500 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
+                      <Check className="mr-1 h-3 w-3 text-foreground sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
                       {t.project.copied}
                     </>
                   ) : (

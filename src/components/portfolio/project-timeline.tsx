@@ -8,8 +8,8 @@ import { DynamicIcon } from "@/components/portfolio/dynamic-icon";
 import { cn } from "@/lib/utils";
 
 const STATUS_DOT: Record<string, string> = {
-  live: "bg-emerald-500 ring-emerald-500/20",
-  beta: "bg-amber-500 ring-amber-500/20",
+  live: "bg-foreground ring-foreground/20",
+  beta: "bg-muted-foreground ring-muted-foreground/20",
   maintenance: "bg-zinc-500 ring-zinc-500/20",
 };
 
@@ -81,8 +81,8 @@ export function ProjectTimeline() {
                     className={cn(
                       "shrink-0 rounded px-1 py-0.5 text-[8px] font-medium",
                       p.status === "live"
-                        ? "bg-emerald-500/15 text-emerald-500"
-                        : "bg-amber-500/15 text-amber-500",
+                        ? "bg-foreground/10 text-foreground"
+                        : "bg-muted-foreground/15 text-muted-foreground",
                     )}
                   >
                     {STATUS_TEXT[p.status] ?? p.status}

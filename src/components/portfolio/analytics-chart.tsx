@@ -164,11 +164,11 @@ export function AnalyticsChart() {
       </div>
       <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="h-2 w-2 rounded-full bg-foreground" />
           Vistas (estimado/día)
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-amber-500" />
+          <span className="h-2 w-2 rounded-full bg-muted-foreground" />
           Mensajes nuevos
         </span>
       </div>

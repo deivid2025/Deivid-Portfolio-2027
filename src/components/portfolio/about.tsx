@@ -137,7 +137,7 @@ export function About() {
                     href={`mailto:${profile.email}`}
                     className="hover:text-foreground"
                   >
-                    {profile.email}
+                    Escribíme
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">

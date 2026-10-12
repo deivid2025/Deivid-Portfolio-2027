@@ -87,7 +87,7 @@ export function Contact() {
                   className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Mail className="h-4 w-4 text-primary" />
-                  {profile.email}
+                  Escribíme
                 </a>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="h-4 w-4 text-primary" />

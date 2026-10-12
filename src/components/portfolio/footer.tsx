@@ -99,7 +99,7 @@ export function Footer() {
                     href={`mailto:${profile.email}`}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    {profile.email}
+                    Escribíme
                   </a>
                 </li>
                 <li className="text-muted-foreground">{t.footer.response}</li>

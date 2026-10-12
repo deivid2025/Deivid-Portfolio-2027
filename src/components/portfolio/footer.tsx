@@ -35,11 +35,10 @@ export function Footer() {
               deivid<span className="text-primary">.tech</span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground">
-              Resuelvo problemas reales con software que funciona.
-              Sin humo. Sistemas en producción, listos para usar.
+              Desarrollo sistemas que reemplazan procesos manuales. IA aplicada + ciberseguridad.
             </p>
             <p className="mt-3 text-xs text-muted-foreground">
-              {t.about.location}
+              {t.about.location} 🇵🇾
             </p>
             <div className="mt-5 max-w-xs">
               <Newsletter />
@@ -116,7 +115,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row">
           <div>
-            © {new Date().getFullYear()} {profile.brand}. {t.footer.rights}
+            © {new Date().getFullYear()} {profile.brand} · Construyendo en público ↓
           </div>
           <div className="flex items-center gap-1.5">
             {t.footer.madeWith} <Heart className="h-3.5 w-3.5 text-muted-foreground" />

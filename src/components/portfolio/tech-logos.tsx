@@ -97,9 +97,53 @@ export function TechLogos() {
   return (
     <section
       id="stack"
-      className="scroll-mt-24 border-y border-border/40 bg-[#0d0d0d] py-20 sm:py-28"
+      className="relative scroll-mt-24 overflow-hidden border-y border-border/40 bg-[#0a0a0a] py-20 sm:py-28"
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      {/* Background: flowing bezier paths (Abstract Linear Minimalism) */}
+      <div className="pointer-events-none absolute inset-0 -z-0">
+        <svg
+          className="absolute inset-0 h-full w-full opacity-30"
+          viewBox="0 0 1200 800"
+          preserveAspectRatio="xMidYMid slice"
+          fill="none"
+        >
+          {/* Layer 1 — darkest, most defined */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <path
+              key={`l1-${i}`}
+              d={`M -100 ${200 + i * 45} C 200 ${150 + i * 45}, 500 ${350 + i * 40}, 900 ${100 + i * 45}, 1300 ${50 + i * 45}`}
+              stroke="white"
+              strokeWidth="1.5"
+              opacity={0.08 + i * 0.005}
+            />
+          ))}
+          {/* Layer 2 — medium */}
+          {Array.from({ length: 14 }).map((_, i) => (
+            <path
+              key={`l2-${i}`}
+              d={`M -100 ${250 + i * 40} C 250 ${200 + i * 40}, 550 ${400 + i * 35}, 950 ${150 + i * 40}, 1300 ${100 + i * 40}`}
+              stroke="white"
+              strokeWidth="1"
+              opacity={0.05 + i * 0.003}
+            />
+          ))}
+          {/* Layer 3 — lightest, most transparent */}
+          {Array.from({ length: 16 }).map((_, i) => (
+            <path
+              key={`l3-${i}`}
+              d={`M -100 ${300 + i * 35} C 300 ${250 + i * 35}, 600 ${450 + i * 30}, 1000 ${200 + i * 35}, 1300 ${150 + i * 35}`}
+              stroke="white"
+              strokeWidth="0.5"
+              opacity={0.03 + i * 0.002}
+            />
+          ))}
+        </svg>
+        {/* Subtle radial glow */}
+        <div className="absolute left-1/4 top-1/3 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/[0.02] blur-[120px]" />
+        <div className="absolute right-1/4 bottom-1/3 h-80 w-80 translate-x-1/2 translate-y-1/2 rounded-full bg-white/[0.015] blur-[100px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

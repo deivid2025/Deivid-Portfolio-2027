@@ -9,6 +9,7 @@ import { profile } from "@/lib/projects";
 import { StatCounter } from "@/components/portfolio/stat-counter";
 import { useI18n } from "@/components/portfolio/i18n-provider";
 import { IdBadge } from "@/components/portfolio/id-badge";
+import { ShapeWavesBackground } from "@/components/anim/shapewaves-background";
 
 const TYPING_WORDS = [
   "full-stack developer",
@@ -60,21 +61,27 @@ export function Hero() {
       id="top"
       className="relative isolate overflow-hidden bg-noise pt-32 pb-20 sm:pt-40 sm:pb-28"
     >
-      {/* Aurora background with parallax */}
+      {/* Animated shape-wave field (WebGPU, falls back to bg color) */}
+      <ShapeWavesBackground />
+
+      {/* Soft mask so the shape field fades into the page edges */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-grid mask-fade-b opacity-60" />
+        <div className="absolute inset-0 bg-grid mask-fade-b opacity-40" />
         <motion.div
           style={{ y: auroraY1 }}
-          className="absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[120px] animate-float-slow"
+          className="absolute -top-32 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[140px] animate-float-slow"
         />
         <motion.div
           style={{ y: auroraY2 }}
-          className="absolute right-10 top-40 h-72 w-72 rounded-full bg-foreground/10 blur-[100px] animate-float-slow [animation-delay:-6s]"
+          className="absolute right-10 top-40 h-72 w-72 rounded-full bg-foreground/10 blur-[120px] animate-float-slow [animation-delay:-6s]"
         />
         <motion.div
           style={{ y: auroraY3 }}
           className="absolute left-6 top-60 h-56 w-56 rounded-full bg-foreground/5 blur-[100px] animate-float-slow [animation-delay:-3s]"
         />
+        {/* Vignette so the text remains legible over the shape field */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/70" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-background/60 to-transparent" />
       </div>
 
       <motion.div style={{ opacity: heroOpacity }} className="mx-auto max-w-6xl px-4 sm:px-6">

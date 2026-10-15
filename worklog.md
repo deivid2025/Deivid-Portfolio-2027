@@ -740,3 +740,65 @@ Verification:
 - Bio: friendly, mentions Python studies, friends, Spain, open to opportunities
 - Screenshots: 0 (clean gradient covers)
 - VLM: "dark/monochrome, no orange, bio friendly mentioning amigos and Spain"
+
+---
+Task ID: USER-REQUEST-3
+Agent: main
+Task: Keep previous profile photo + previous real brand tech logos; add ShapeWaves (React Bits) as hero background.
+
+User message:
+"muy bien pero no borres mi foto anterior coloca de nuevo mi foto y las tecnologias que tenia antes quiero que de fondo tengamos esto:"
++ prompt describing ShapeWaves (React Bits component, JS+CSS variant, vgpu dep).
+
+Work Log:
+- Read the uploaded ShapeWaves prompt from /home/z/my-project/upload/Pasted Content_1792095128218.txt (971 lines). It is the React Bits ShapeWaves component (WebGPU shape-field with mixed triangles/circles/squares that respond to cursor splashes, has intro animation, glow pass, fade mask, etc.). Dependency: `vgpu`.
+- Verified project state:
+  * /public/profile-photo.png EXISTS — kept untouched.
+  * src/components/portfolio/tech-logos.tsx has all real brand logos (Python, TypeScript, Next.js, React, Tailwind, Flask, PostgreSQL, Supabase, Docker, Git, GitHub, Vercel, Dokploy, Kali Linux, Metasploit, Wireshark, Burp Suite, Hashcat, Cursor, Claude Code, Codex, VS Code, ChatGPT, Claude) — kept untouched.
+  * src/components/portfolio/about.tsx already references profile.avatar (`/profile-photo.png`) — kept.
+- Installed `vgpu@0.6.0` (Vercel's WebGPU helper): `bun add vgpu`.
+- Created `src/components/anim/shapewaves/`:
+  * shapewaves.css — original React Bits CSS + NEW CSS-only fallback layer (dot-grid + radial glow) that fades out when WebGPU canvas becomes ready. This makes the hero look intentional in headless/preview browsers without GPU.
+  * shapewaves.tsx — TypeScript port of the original JS component. Adjusted to:
+    - Avoid "ref write during render" lint errors (sync settingsRef/onErrorRef inside useEffects instead of inline).
+    - Cast vgpu runtime functions to `AnyFn` (typed `any` aliases) because vgpu's public types are loose and don't match the call shape used by the original code.
+    - Early return `if (typeof navigator === "undefined" || !navigator.gpu) return undefined;` so SSR / non-WebGPU browsers skip the WebGPU init path entirely.
+    - Added CSS fallback DOM (`<div class="shape-waves__fallback">`) wrapped around the canvas so even when WebGPU init fails, the user still sees a subtle animated dot grid + radial pulse glow that fades out once the canvas presents.
+  * index.ts — barrel export `{ ShapeWaves, ShapeWavesProps }` (named exports to avoid default-export confusion).
+- Created `src/components/anim/shapewaves-background.tsx`:
+  * Client component wrapping ShapeWaves.
+  * Uses next-themes `useTheme()` to pick monochrome colors per theme:
+    - Dark: color=#3f3f46 (zinc-700), hoverColor=#ffffff, backgroundColor=#0a0a0a
+    - Light: color=#a1a1aa (zinc-400), hoverColor=#18181b, backgroundColor=#f8f8f7 (matches --background in light mode)
+  * Tuned props for hero use: speed 0.7, scale 1.1, brightness 0.42, flow 0.6 (slow drift), direction 25°, fade 0.35, glow 0.32, interactive (mouse splashes), intro 1.8s.
+  * Waits for `mounted` before reading resolvedTheme (SSR-safe).
+- Updated `src/components/portfolio/hero.tsx`:
+  * Added `<ShapeWavesBackground />` as the FIRST background layer (bottom of stack, -z-10).
+  * Kept the existing aurora blobs + bg-grid mask layer on top of ShapeWaves (slightly reduced opacity 0.20/0.10/0.05 so the wave field stays visible).
+  * Added a vignette gradient (top fade + bottom fade) so the headline + body text remain legible over the shape field.
+  * Kept the existing ID badge, headline "Hola, soy David Garay.", typewriter, bio, CTAs and stats grid untouched.
+
+Verification (agent-browser + VLM + lint):
+- bun run lint: clean ✅
+- agent-browser open http://localhost:3000 → 200, no errors, no console errors.
+- Hero (dark, desktop 1440x900): VLM confirms visible dot pattern + dark monochrome background, "Hola, soy David Garay." headline present, bio + stats visible, CTA buttons present.
+- In sandbox preview `navigator.gpu.requestAdapter()` returns null (no real GPU), so ShapeWaves correctly degrades to the CSS fallback (dot grid + radial pulse). In a real Chrome/Edge with GPU, the WebGPU canvas would render the actual animated shape waves.
+- Tech stack section: VLM confirmed real brand logos with original colors visible (Python blue, TypeScript blue, Next.js white-on-black, React light-blue atom, Tailwind cyan, Flask white, PostgreSQL blue elephant, Supabase green bolt).
+- About section: VLM confirmed profile photo of David Garay visible in card, name "David Garay" shown, role "Full-Stack Developer · Ciberseguridad · IA" shown, all stats visible.
+- Project modal (FactuSheet): opens correctly, features + metrics + tech stack visible, scrollable.
+- Light mode toggle: hero adapts — background switches to light off-white (#f3f4f6-ish), dot pattern still visible, text inverts to black. ShapeWavesBackground picks the light-mode color set thanks to useTheme.
+- Mobile (390x844): VLM scored 9/10 — perfectly stacked, no overlaps, text readable, CTA touch targets ≥48px, stats grid collapses to 2 columns.
+- Sticky footer: layout.tsx uses `flex min-h-screen flex-col` with `<main className="flex-1">` + `<Footer />` outside main → footer sticks to viewport bottom on short pages and is pushed down naturally on long pages. Confirmed via getBoundingClientRect (footer at 11211px on a 11651px page when scrolled to top, as expected).
+
+Stage Summary:
+- ShapeWaves integrated as hero background. WebGPU-powered animated shape field with cursor-interactive splashes for users on real Chrome/Edge with GPU; CSS-only animated dot-grid + radial-glow fallback for everyone else (sandbox preview, Safari, Firefox, headless, reduced-motion).
+- Previous profile photo (`/public/profile-photo.png`) preserved in About + navbar brand.
+- All previous real brand tech logos preserved in TechLogos section (no warm colors added — stays monochrome).
+- Hero remains dark/monochrome in dark mode and light/monochrome in light mode — no orange/amber/blue accents introduced.
+- Page renders, all interactions work, sticky footer pattern preserved.
+- Lint clean.
+
+Unresolved issues / risks / priority recommendations for next phase:
+- ShapeWaves only renders the actual WebGL waves on WebGPU-capable browsers. In sandbox preview (no GPU adapter), users see the CSS-only fallback dot grid instead. That's intentional and looks good, but if the user wants the FULL wave animation visible in the preview too, we'd need to implement a 2D-canvas WebGL1 fallback (much more work).
+- vgpu ships ESM with `export type` files but its runtime types don't match the original JS call patterns; I used `any`-typed aliases (`AnyFn`, `AnyTarget`, etc.) and `as unknown as { fn: AnyFn }` casts to bridge the gap. If vgpu releases stricter types in the future, we'd want to revisit.
+- The user's `bun add vgpu` blocked 2 postinstall scripts (cosmetic, not needed at runtime). No action needed.

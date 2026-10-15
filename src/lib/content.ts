@@ -84,6 +84,23 @@ export interface UpdatePost {
 
 export const updates: UpdatePost[] = [
   {
+    slug: "notesapp-idea-loca-nacio-en-x",
+    title: "NotesApp Uchiha: la idea loca que nació de un post en X",
+    excerpt:
+      "Vi un post en X sobre un tablero de tareas con notas adhesivas estilo doodle y dije: tengo que hacer esto. Una semana después estaba en producción.",
+    body: [
+      "La verdad, NotesApp Uchiha nació por accidente. Estaba scrolleando X (como siempre) y vi un post sobre un tablero de tareas con notas adhesivas. No era nada del otro mundo, pero algo hizo click. Me dije: tengo que hacer esto, pero con mi toque.",
+      "El toque fue meterle el anime Bleach por arriba. Sistema de logros con sellos animados, prioridad visual con glow pulsante, estilo doodle con textura de papel arrugado. Productividad que no aburre, básicamente.",
+      "Lo armé en una semana. Next.js, React, TypeScript, Tailwind y Framer Motion para las animaciones. Sin cuentas, sin login, todo en el navegador. Dark mode negro puro y light mode creme paper. Lo deployé en notesapp.deividtech.cloud y listo.",
+      "La moraleja: a veces las mejores ideas no vienen de un brainstorming ni de un análisis de mercado. Vienen de un post random en X a las 2 de la mañana. Si te copa una idea, hacela. No lo pienses dos veces.",
+    ],
+    date: "2026-10-12",
+    category: "devlog",
+    tags: ["NotesApp", "Bleach", "X", "idea loca", "productividad", "anime"],
+    project: "NotesApp Uchiha",
+    readTime: 3,
+  },
+  {
     slug: "factusheet-beta-publica",
     title: "FactuSheet abre beta pública con 5 escaneos gratis",
     excerpt:

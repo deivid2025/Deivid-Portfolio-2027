@@ -251,6 +251,78 @@ export const projects: Project[] = [
     audience:
       "Contadores, estudios contables, abogados, administradores y PyMEs que procesan volumen de facturas y necesitan automatizar la carga manual.",
   },
+  {
+    slug: "notesapp-uchiha",
+    name: "NotesApp Uchiha",
+    tagline: "Tablero de tareas con estilo doodle, notas adhesivas y logros inspirados en Bleach",
+    category: "Productividad IA",
+    status: "live",
+    year: "2026",
+    url: "https://notesapp.deividtech.cloud/",
+    accent: "from-zinc-800 via-zinc-900 to-black",
+    icon: "Sticker",
+    screenshot: "/screenshots/despega-peelme.png",
+    summary:
+      "Tablero de tareas gamificado con estilo doodle, notas adhesivas arrastrables y sistema de logros inspirado en el anime Bleach. Nació de un post random en X.",
+    description:
+      "Productividad con personalidad. Notas adhesivas que se arrastran, tareas con prioridad visual y logros desbloqueables estilo anime. Dark y light mode nativo.",
+    longDescription:
+      "NotesApp Uchiha nació de un post random en X. Vi una idea de tablero de tareas con notas adhesivas estilo doodle y dije: tengo que hacer esto. La verdad fue una idea loca que se materialó en una semana. Es un tablero de tareas gamificado: las tareas son notas adhesivas que se arrastran, tienen prioridad visual con colores y animaciones, y hay un sistema de logros inspirado en el anime Bleach con sellos animados. Dark y light mode nativo con paleta creme en light y negro puro en dark. Sin cuentas, sin login, todo se guarda en el navegador. Es productividad que no aburre.",
+    features: [
+      {
+        title: "Notas adhesivas arrastrables",
+        description:
+          "Las tareas son notas que se mueven entre columnas con animación de caída y efecto paper.",
+      },
+      {
+        title: "Sistema de logros Bleach",
+        description:
+          "Sellos animados estilo anime que se desbloquean al completar tareas y mantener rachas.",
+      },
+      {
+        title: "Prioridad visual con glow",
+        description:
+          "La tarea más urgente brilla con animación pulsante para que no se te pase.",
+      },
+      {
+        title: "Dark y Light mode nativo",
+        description:
+          "Negro puro en dark, creme paper en light. Detección automática del sistema.",
+      },
+      {
+        title: "Sin cuentas ni login",
+        description:
+          "Todo se guarda en el navegador. Privacidad total, cero fricción.",
+      },
+      {
+        title: "Modo doodle",
+        description:
+          "Estilo visual hand-drawn con textura de papel arrugado y tipografía casual.",
+      },
+    ],
+    metrics: [
+      { label: "Modos", value: "2" },
+      { label: "Logros", value: "6+" },
+      { label: "Animaciones", value: "15+" },
+      { label: "Cuentas", value: "0" },
+    ],
+    techStack: [
+      { name: "Next.js", category: "frontend" },
+      { name: "React", category: "frontend" },
+      { name: "TypeScript", category: "frontend" },
+      { name: "Tailwind CSS", category: "frontend" },
+      { name: "Framer Motion", category: "frontend" },
+      { name: "Local Storage", category: "tooling" },
+    ],
+    highlights: [
+      "Nació de un post en X",
+      "Notas adhesivas arrastrables",
+      "Logros inspirados en Bleach",
+      "Dark y Light mode nativo",
+    ],
+    audience:
+      "Cualquiera que quiera productividad que no aburre. Para los que odian Trello pero aman los animes.",
+  },
 ];
 
 export const profile = {
@@ -268,7 +340,7 @@ export const profile = {
   longBio:
     "Estudié programación con Python y de ahí salté al ecosistema web. Hoy trabajo con React, Next.js, TypeScript, Docker, PostgreSQL y Supabase. Pero no solo programo. También me dedico a la ciberseguridad y el hacking ético. Hice cursos de Kali Linux a nivel intermedio avanzado, hacking ético ofensivo en Red Team, configuración de firewalls y pentesting. Combino el desarrollo con la seguridad para que mis productos no solo funcionen sino que estén protegidos. Uso IA todos los días. ChatGPT, Claude, Cursor y Codex son parte de cómo trabajo. Soy una persona amigable y gracias a la programación conocí gente en varios países. Tengo un gran amigo en España con el que ya van muchos años de charlas y proyectos. Me encanta compartir lo que aprendo y siempre estoy dispuesto a charlar sobre ideas nuevas y oportunidades.",
   stats: [
-    { label: "Sistemas en producción", value: "3" },
+    { label: "Sistemas en producción", value: "4" },
     { label: "Líneas de código", value: "50k+" },
     { label: "Tecnologías dominadas", value: "15+" },
     { label: "Años desarrollando", value: "5+" },
@@ -308,6 +380,11 @@ export const profile = {
       label: "FactuSheet",
       url: "https://oboroscan-app.deividtech.cloud/",
       icon: "FileScan",
+    },
+    {
+      label: "NotesApp",
+      url: "https://notesapp.deividtech.cloud/",
+      icon: "Sticker",
     },
   ],
 };

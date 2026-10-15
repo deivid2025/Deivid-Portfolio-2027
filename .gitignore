@@ -57,3 +57,4 @@ server.log
 # root-level PNG files (screenshots/trash) — public/ is NOT ignored
 /*.png
 /skills/
+/tool-results/

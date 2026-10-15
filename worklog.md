@@ -802,3 +802,55 @@ Unresolved issues / risks / priority recommendations for next phase:
 - ShapeWaves only renders the actual WebGL waves on WebGPU-capable browsers. In sandbox preview (no GPU adapter), users see the CSS-only fallback dot grid instead. That's intentional and looks good, but if the user wants the FULL wave animation visible in the preview too, we'd need to implement a 2D-canvas WebGL1 fallback (much more work).
 - vgpu ships ESM with `export type` files but its runtime types don't match the original JS call patterns; I used `any`-typed aliases (`AnyFn`, `AnyTarget`, etc.) and `as unknown as { fn: AnyFn }` casts to bridge the gap. If vgpu releases stricter types in the future, we'd want to revisit.
 - The user's `bun add vgpu` blocked 2 postinstall scripts (cosmetic, not needed at runtime). No action needed.
+
+---
+Task ID: USER-REQUEST-4
+Agent: main
+Task: Push to GitHub + put profile photo in the favicon WITHOUT gray background + make the favicon look bigger.
+
+User message:
+"has push ami github y coloca mi foto en el favico sin fondo gris y que la foto o mi favicon se vea mas grande"
+
+Work Log:
+- Inspected existing /public: favicon.png (104KB), icon.png (104KB), apple-icon.png (104KB), profile-photo.png (585KB, 800x800 RGB, off-white background).
+- VLM inspection of old favicon.png confirmed it was a 800x800ish image of the subject (man in black Dior hoodie) with a light/off-white background — the background made the favicon look like it had a gray box around it.
+- VLM inspection of profile-photo.png: medium shot, off-white/light-gray textured wall background, soft shadow gradient near subject.
+- Wrote scripts/build_favicon.py (Pillow-based):
+  1. Background removal: flood-fill from every pixel on all 4 edges, threshold R,G,B >= 185 (catches the soft shadow gradient that fades from white to gray, not just the pure white wall).
+  2. Alpha feather: GaussianBlur(1.2) on the alpha channel only, composited back via Image.composite — gives smooth anti-aliased edges at small favicon sizes (16/32).
+  3. Tight upper-body crop: getbbox() of non-transparent pixels, then keep only the top 62% of the subject's vertical extent (head + torso) so the favicon reads as a person instead of a tiny stick figure.
+  4. Square-pad (1:1) centered, then resize+save:
+     - favicon.png (64x64) — main browser tab
+     - icon.png (192x192) — Android Chrome / PWA
+     - apple-icon.png (180x180) — Apple touch icon
+     - icon-512.png (512x512) — PWA maskable source (NEW file)
+  Result: subject occupies ~55% of canvas (up from ~35%), all 4 corner pixels are (0,0,0,0) — fully transparent, no gray box.
+- Updated src/app/layout.tsx metadata.icons from single-string icon to a multi-size array so browsers pick the right resolution:
+  icon: [64, 192, 512] variants, apple: [180].
+- profile-photo.png left UNTOUCHED — user explicitly said "no borres mi foto anterior".
+- Verified in agent-browser:
+  * GET /favicon.png → 200, image/png, 6882 bytes, dims 64x64.
+  * <link rel="icon" sizes="64x64" type="image/png" href="/favicon.png"> present in DOM.
+  * Navbar avatar still loads /profile-photo.png correctly.
+  * No 404s in dev.log for any icon path.
+- bun run lint: clean (0 errors).
+- Git:
+  * Staged 6 files (favicon.png, icon.png, apple-icon.png, icon-512.png, layout.tsx, scripts/build_favicon.py).
+  * Committed as "favicon: transparent background, upper-body crop, multi-size (16/32/64/180/192/512)" (eb5f6cb).
+  * Pushed to origin main → success (a0206b6..eb5f6cb). Also pulled in ce470e1 (the ShapeWaves commit from the previous round, which had not been pushed yet).
+  * Verified: git ls-remote origin main returns eb5f6cb257d739ff0763215d17957deb8b5be1d0 refs/heads/main.
+
+Stage Summary:
+- Favicon regenerated from David's profile photo:
+  - Background fully transparent (alpha=0 in corners) → no more gray/white box around the avatar.
+  - Subject cropped to head+torso upper body → fills ~55% of canvas instead of ~35% → looks bigger.
+  - 4 sizes saved: 64, 180, 192, 512.
+  - layout.tsx exposes all sizes via metadata.icons array.
+- Committed + pushed to GitHub (origin main, eb5f6cb).
+- profile-photo.png untouched (as the user requested).
+- Lint clean, dev server healthy, no 404s on icon requests.
+
+Unresolved issues / risks / priority recommendations for next phase:
+- The favicon at 16x16 will be quite small/blurry — it's the nature of fitting a portrait photo into a 16x16 square. If the user wants better legibility at 16x16, options are: (a) use just the head/face (crop tighter to head only), (b) add a subtle ring/border background so the favicon reads on both light and dark browser tabs, (c) generate a separate simplified monogram logo for tiny sizes.
+- For OGP/social-preview images, consider also generating an og-image.png (1200x630) from the same source for sharing previews on Twitter/WhatsApp.
+- The favicon script lives in scripts/build_favicon.py and can be re-run any time the source photo changes.

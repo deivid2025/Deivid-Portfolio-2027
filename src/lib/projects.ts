@@ -260,8 +260,8 @@ export const projects: Project[] = [
     year: "2026",
     url: "https://notesapp.deividtech.cloud/",
     accent: "from-zinc-800 via-zinc-900 to-black",
-    icon: "Sticker",
-    screenshot: "/screenshots/despega-peelme.png",
+    icon: "Code2",
+    screenshot: "/screenshots/notesapp-uchiha.png",
     summary:
       "Tablero de tareas gamificado con estilo doodle, notas adhesivas arrastrables y sistema de logros inspirado en el anime Bleach. Nació de un post random en X.",
     description:

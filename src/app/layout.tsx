@@ -34,8 +34,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "David Garay" }],
   icons: {
-    icon: "/favicon.png",
-    apple: "/apple-icon.png",
+    icon: [
+      { url: "/favicon.png", sizes: "64x64", type: "image/png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 

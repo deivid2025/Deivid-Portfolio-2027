@@ -1025,3 +1025,48 @@ Unresolved issues / risks / priority recommendations for next phase:
 - On very small phones (≤360px wide), the card might still feel a bit tight. Could add a `xs:` breakpoint if needed.
 - The card content (name, barcode) is small but legible per VLM. If user wants even bigger card on mobile, could remove the stats row from the hero on mobile and move it elsewhere, freeing up vertical space for a taller card.
 - Several other files in the repo were modified by the recurring 15-min webDevReview cron job (bun.lock, card-front.png, icon-512.png, build scripts, shapewaves/*, lanyard/*). Those changes are NOT part of this commit — they'll need a separate review/commit. The user should be aware that the cron job is autonomously editing files every 15 minutes.
+
+---
+Task ID: USER-REQUEST-9
+Agent: main
+Task: Fix the bug where the project details modal was cutting off text on mobile ("las letras no se logran ver").
+
+User message:
+"En la sección de detalles no esta funcionando correctamente favor verificar y corregir este bug, checa la tarjeta esta super guai pero las letras no se logran ver verifica o haz ques e vea mejor por favor"
++ uploaded mobile screenshot showing the NotesApp project modal with text cut off on the right.
+
+Work Log:
+- Inspected the user's uploaded screenshot (738x1600 portrait mobile screenshot) via VLM. Identified the bug: text in the project detail modal was being cut off at the right edge — tagline truncated to "Tablero de tareas con estilo doodle, notas adhesivas log[os] en Bleach" (missing "y logros inspirados"), URL "notesapp.deivid" cut off mid-domain, tech badges "TypeScript Fro" missing "ntend", audience text cut off mid-sentence after "Para".
+- Reproduced the bug locally with agent-browser at 390x844 (iPhone 14 viewport). Opened the NotesApp project modal and inspected DOM dimensions:
+  * modal bounding rect: 390×759, top=42, fits in viewport.
+  * motion.div (direct child of modal): **544×590** — 154px WIDER than the modal!
+  * scrollable content area: 543.875px wide, scrollHeight 1577.
+- Root cause identified: the shadcn/ui DialogContent base class uses `display: grid` (line 63 of src/components/ui/dialog.tsx: `"... grid w-full max-w-[calc(100%-2rem)] ..."`). With CSS Grid, a grid item's default `min-width: auto` means it sizes to its CONTENT's natural width — so when a long URL or tech badge pushes the inner content past the modal width, the motion.div grows wider than its parent. `overflow-hidden` on the modal then clipped the right ~154px of content, hiding text on mobile.
+- The standard CSS Grid fix is to add `min-w-0` to the grid item, which lets it shrink below its content's natural width.
+- Applied fixes in src/components/portfolio/project-modal.tsx:
+  * motion.div: added `className="min-w-0"`.
+  * Scrollable area + inner `space-y-6` div: added `min-w-0`.
+  * QuickFact component:
+    - Removed `truncate` from the value div (was ellipsizing the URL).
+    - Conditional className: `break-all` for href-bearing facts (URLs) so the full domain wraps mid-word and is always visible; normal wrapping for short values.
+    - Added `min-w-0` to the outer Link/div containers.
+    - Added `shrink-0` to the icon so it doesn't get squished.
+  * Tech stack Badge: wrapped `{tch.name}` in `<span className="truncate">`, added `max-w-full break-words` to the Badge and `shrink-0` to the category label span — so badges wrap cleanly instead of overflowing.
+  * URL value: stripped trailing `/` for cleaner display (`notesapp.deividtech.cloud` instead of `notesapp.deividtech.cloud/`).
+- Verified via agent-browser at 390x844:
+  * motion.div width now 388px (was 544px) → fits within the 390px modal. ✅
+  * VLM on top of modal: tagline fully visible (wraps to 3 lines), URL fully visible (wraps to 2 lines: "notesapp.deividtech.clo" + "ud"), all 4 QuickFact cards (Año, Categoría, Estado, URL) readable. ✅
+  * VLM on bottom of modal (scrolled): all 6 tech badges fully visible (Next.js, React, TypeScript, Tailwind CSS, Framer Motion, Local Storage), audience text "Cualquiera que quiera productividad que no aburre..." fully visible, related projects (FactuSheet) visible. ✅
+- bun run lint: clean.
+- Git: committed as "fix(modal): prevent content overflow on mobile (text was getting cut off)" (99cbba8). Pushed to origin main (e206da9..99cbba8). Success.
+
+Stage Summary:
+- Project detail modal now renders correctly on mobile — all text is visible, no truncation, no overflow.
+- The fix uses `min-w-0` (standard CSS Grid fix) to let the motion.div shrink to fit the modal width, plus `break-all` for URLs and `truncate` for tech badge names so long content wraps instead of pushing the layout wider.
+- Desktop layout is unchanged (the bug only manifested on narrow viewports where the modal width approaches the content's natural width).
+- Pushed to GitHub (origin main, 99cbba8).
+
+Unresolved issues / risks / priority recommendations for next phase:
+- The same `display: grid` issue could affect other modals that use the shadcn/ui Dialog component with long content. The `min-w-0` fix is applied per-modal in project-modal.tsx — a more permanent fix would be to add `min-w-0` to the DialogContent base class in src/components/ui/dialog.tsx so all dialogs are safe by default. Worth doing if more modals are added.
+- The URL wraps awkwardly as "notesapp.deividtech.clo" + "ud" — that's because `break-all` allows breaking mid-word at any character. Could use `break-words` (only break at word boundaries) for slightly nicer wrapping, but for URLs without spaces, `break-all` is the right choice.
+- Could also add `overflow-wrap: anywhere` to the longDescription paragraph as a defensive measure against very long unbreakable strings.

@@ -19,13 +19,27 @@
 
 ---
 
-## 2026-10-16 — Fix #2: Agregar "4 SISTEMAS EN PRODUCCIÓN" a la card
+## 2026-10-16 — Fix #2: Stats card del hero "Sistemas en producción"
 
 **Pedido del usuario:**
 "ademas de eso en la card debes agregar ya sistemas en produccion"
 
-**Fix aplicado:**
-- Actualicé `scripts/build_card_front.py` para añadir un bloque destacado con el texto **"4 SISTEMAS EN PRODUCCIÓN"** entre el headshot y la fila de logos tech. Usa un badge verde con número "4" grande + label, y debajo el texto completo.
-- También actualicé el count de stats en `src/lib/projects.ts` (la card ahora dice 4, no 3).
+**Interpretación inicial (INCORRECTA):**
+Agregué "4 SISTEMAS EN PRODUCCIÓN" como badge verde en el `card-front.png` (la tarjeta de presentación del hero).
+
+**Corrección del usuario:**
+"animal aqui es donde debias colocar 4sistemas en produccion no en mi tarjeta de presentacion tarado corrige eso" + screenshot de la **stats card** del hero (el widget de "3 Sistemas en producción" → "4 Sistemas en producción").
+
+**Fix aplicado (corrección):**
+- **Saqué** el badge "4 SISTEMAS EN PRODUCCIÓN" del `scripts/build_card_front.py` y regeneré `public/card-front.png` sin ese bloque.
+- El lugar correcto del "4 Sistemas en producción" es en la **stats card del hero** (el grid de 4 métricas: sistemas / líneas / tecnologías / años). Eso ya estaba arreglado en `hero.tsx` (value "4") y `i18n.ts` (badge del hero "Portfolio · 4 sistemas en producción").
+
+**Lección anotada:** Cuando el usuario dice "card", puede referirse a la stats card del hero (widget de métricas), NO necesariamente a la tarjeta de presentación (ID badge del hero). Siempre pedir confirmación visual si hay ambigüedad.
+
+---
+
+## Pendiente de revisión
+
+- Verificar que la tarjeta de presentación (ID badge) se vea nítida (no borrosa) en móvil también — el finish matte + textura 1024×1440 debería haberlo resuelto, pero falta verificación móvil.
 
 ---

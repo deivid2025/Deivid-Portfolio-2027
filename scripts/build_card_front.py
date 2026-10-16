@@ -300,70 +300,10 @@ draw.text(
     font=font_meta,
 )
 
-# --- 7. "4 SISTEMAS EN PRODUCCIÓN" badge ----------------------------------
-# NEW: prominent badge highlighting David's 4 production apps.
-SYSTEMS_Y = LOC_Y + s(40)
-SYSTEMS_BADGE_W = s(380)
-SYSTEMS_BADGE_H = s(70)
-SYSTEMS_BADGE_X = (CARD_W - SYSTEMS_BADGE_W) // 2
-
-# Outer dark card with subtle green accent.
-draw.rounded_rectangle(
-    [SYSTEMS_BADGE_X, SYSTEMS_Y,
-     SYSTEMS_BADGE_X + SYSTEMS_BADGE_W, SYSTEMS_Y + SYSTEMS_BADGE_H],
-    radius=s(12),
-    fill=(18, 22, 18),
-    outline=(GREEN_DARK[0], GREEN_DARK[1], GREEN_DARK[2]),
-    width=2,
-)
-
-# Big "4" on the left, green.
-font_big_num = load_font(s(40), bold=True)
-num_text = "4"
-bbox = draw.textbbox((0, 0), num_text, font=font_big_num)
-tw = bbox[2] - bbox[0]
-th = bbox[3] - bbox[1]
-draw.text(
-    (SYSTEMS_BADGE_X + s(18), SYSTEMS_Y + (SYSTEMS_BADGE_H - th) / 2 - 2),
-    num_text,
-    fill=GREEN,
-    font=font_big_num,
-)
-
-# Vertical divider line between "4" and the label.
-divider_x = SYSTEMS_BADGE_X + s(70)
-draw.line(
-    [(divider_x, SYSTEMS_Y + s(14)),
-     (divider_x, SYSTEMS_Y + SYSTEMS_BADGE_H - s(14))],
-    fill=(40, 60, 40),
-    width=2,
-)
-
-# Two-line label on the right of the divider.
-font_sys_top = load_font(s(15), bold=True)
-font_sys_sub = load_font(s(11), bold=False)
-label_x = divider_x + s(14)
-draw.text(
-    (label_x, SYSTEMS_Y + s(12)),
-    "SISTEMAS EN",
-    fill=TEXT_WHITE,
-    font=font_sys_top,
-)
-draw.text(
-    (label_x, SYSTEMS_Y + s(33)),
-    "PRODUCCIÓN",
-    fill=TEXT_WHITE,
-    font=font_sys_top,
-)
-draw.text(
-    (label_x, SYSTEMS_Y + s(54)),
-    "DESPEGA! · Redline · FactuSheet · NotesApp",
-    fill=TEXT_DIM,
-    font=font_sys_sub,
-)
-
-# --- 8. Tech logos row ----------------------------------------------------
-LOGO_Y = SYSTEMS_Y + SYSTEMS_BADGE_H + s(28)
+# --- 7. Tech logos row ----------------------------------------------------
+# (The "4 SISTEMAS EN PRODUCCIÓN" count lives in the hero stats grid, NOT
+# on this card. Removed here per user feedback — see FIXES_LOG.md.)
+LOGO_Y = LOC_Y + s(40)
 LOGO_SIZE = s(44)
 LOGO_GAP = s(16)
 LOGOS = [

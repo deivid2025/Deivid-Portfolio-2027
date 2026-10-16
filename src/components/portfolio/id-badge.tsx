@@ -19,7 +19,7 @@ export function IdBadge() {
         frontImage="/card-front.png"
         cardColor="#0a0a0a"
         orientation="portrait"
-        finish="glossy"
+        finish="matte"
         cornerRadius={0.15}
         size={0.65}
         anchor="center"

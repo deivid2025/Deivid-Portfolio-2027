@@ -13,7 +13,7 @@ import { useI18n } from "@/components/portfolio/i18n-provider";
 export function About() {
   const { t } = useI18n();
   const stats = [
-    { value: "3", label: t.hero.stats.systems },
+    { value: "4", label: t.hero.stats.systems },
     { value: "50k+", label: t.hero.stats.lines },
     { value: "20+", label: t.hero.stats.techs },
     { value: "5+", label: t.hero.stats.years },

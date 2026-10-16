@@ -59,7 +59,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate overflow-hidden bg-noise pt-32 pb-20 sm:pt-40 sm:pb-28"
+      className="relative isolate overflow-hidden bg-noise pt-20 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28"
     >
       {/* Animated shape-wave field (WebGPU, falls back to bg color) */}
       <ShapeWavesBackground />
@@ -85,7 +85,7 @@ export function Hero() {
       </div>
 
       <motion.div style={{ opacity: heroOpacity }} className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col items-center gap-2 sm:gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
           {/* Left: text */}
           <div className="flex-1">
             <motion.div
@@ -155,7 +155,7 @@ export function Hero() {
           </div>
 
           {/* Right: ID Badge drops from above */}
-          <div className="hidden shrink-0 lg:block">
+          <div className="w-[16rem] shrink-0 self-center sm:w-[20rem] lg:mt-0 lg:w-auto lg:self-start">
             <IdBadge />
           </div>
         </div>

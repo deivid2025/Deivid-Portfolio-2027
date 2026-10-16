@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const Lanyard = dynamic(() => import("./lanyard/Lanyard"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-[500px] items-center justify-center">
+    <div className="flex h-[280px] w-full items-center justify-center sm:h-[400px] lg:h-[500px]">
       <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground/20 border-t-foreground" />
     </div>
   ),
@@ -14,7 +14,7 @@ const Lanyard = dynamic(() => import("./lanyard/Lanyard"), {
 
 export function IdBadge() {
   return (
-    <div style={{ width: "100%", height: "500px" }}>
+    <div className="h-[280px] w-full sm:h-[400px] lg:h-[500px]">
       <Lanyard
         frontImage="/card-front.png"
         cardColor="#0a0a0a"

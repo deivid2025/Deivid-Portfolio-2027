@@ -21,9 +21,42 @@ interface Certification {
   hours?: string;
   image: string;
   category: "security" | "development" | "other";
+  /** Optional public link to verify the certificate (e.g. Udemy course page). */
+  url?: string;
 }
 
 const CERTS: Certification[] = [
+  // --- Most recent / advanced certifications first ---
+  {
+    title:
+      "Certificación de Hacking: eWPT · Pentesting Web",
+    organization: "Udemy · Certificaciones en Tecnología",
+    year: "2026",
+    image: "/certs/cert-ewpt-pentesting-web.png",
+    category: "security",
+    url: "https://www.udemy.com/course/certificacion-hacking-ewpt-pentesting-web/learn/lecture/38642832#overview",
+  },
+  {
+    title:
+      "Certificación CyberOps Associate 200-201 · Curso Completo",
+    organization: "Udemy",
+    year: "2025",
+    hours: "16.5 horas",
+    image: "/certs/cert-cyberops-200-201.jpg",
+    category: "security",
+    url: "https://www.udemy.com/course/certificacion-cyberops-associate-200-201-curso-completo/learn/lecture/43431696?start=0#overview",
+  },
+  {
+    title:
+      "SOC 101 · Introducción a las Operaciones de Seguridad",
+    organization: "Udemy",
+    year: "2025",
+    hours: "3.5 horas",
+    image: "/certs/cert-soc-101.jpg",
+    category: "security",
+    url: "https://www.udemy.com/course/soc-101-introduccion-a-las-operaciones-de-seguridad/learn/lecture/39409626?start=0#overview",
+  },
+  // --- Earlier certifications ---
   {
     title: "Kali Linux · Seguridad Informática · Pentesting · Hacking",
     organization: "Udemy",
@@ -204,6 +237,22 @@ export function Certifications() {
                   className="w-full"
                 />
               </div>
+              {selected.url && (
+                <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-card/40 px-5 py-3">
+                  <span className="text-xs text-muted-foreground">
+                    Certificado verificable en Udemy
+                  </span>
+                  <a
+                    href={selected.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-card"
+                  >
+                    Ver en Udemy
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

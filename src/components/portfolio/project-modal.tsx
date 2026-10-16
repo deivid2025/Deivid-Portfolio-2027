@@ -120,6 +120,7 @@ export function ProjectModal({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              className="min-w-0"
             >
               {/* Cover banner — real screenshot */}
               <div className="relative h-40 overflow-hidden sm:h-48">
@@ -157,8 +158,8 @@ export function ProjectModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
-                <div className="space-y-6 py-4">
+              <div className="max-h-[70vh] min-w-0 overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
+                <div className="min-w-0 space-y-6 py-4">
                   {/* Quick facts */}
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                     <QuickFact
@@ -179,7 +180,7 @@ export function ProjectModal({
                     <QuickFact
                       icon={ExternalLink}
                       label="URL"
-                      value={project.url.replace(/^https?:\/\//, "")}
+                      value={project.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                       href={project.url}
                     />
                   </div>
@@ -246,12 +247,12 @@ export function ProjectModal({
                           key={tch.name}
                           variant="outline"
                           className={cn(
-                            "border font-mono text-[11px]",
+                            "max-w-full break-words border font-mono text-[11px]",
                             CATEGORY_COLORS[tch.category],
                           )}
                         >
-                          {tch.name}
-                          <span className="ml-1.5 opacity-60">
+                          <span className="truncate">{tch.name}</span>
+                          <span className="ml-1.5 shrink-0 opacity-60">
                             {CATEGORY_LABEL_I18N[tch.category] ?? tch.category}
                           </span>
                         </Badge>
@@ -382,11 +383,21 @@ function QuickFact({
   const content = (
     <>
       <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-        <Icon className="h-3 w-3" />
+        <Icon className="h-3 w-3 shrink-0" />
         {label}
       </div>
-      <div className="mt-1 truncate text-xs font-medium text-foreground">
-        {value}
+      <div className="mt-1 min-w-0">
+        {/* href target (e.g. a URL) can break mid-word so the full domain
+            is always visible on narrow screens. Other values wrap normally. */}
+        <div
+          className={
+            href
+              ? "break-all text-xs font-medium text-foreground"
+              : "text-xs font-medium text-foreground"
+          }
+        >
+          {value}
+        </div>
       </div>
     </>
   );
@@ -396,14 +407,14 @@ function QuickFact({
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="block truncate rounded-lg border border-border/60 bg-card/50 p-2.5 transition-colors hover:border-primary/40 hover:bg-card"
+        className="block min-w-0 rounded-lg border border-border/60 bg-card/50 p-2.5 transition-colors hover:border-primary/40 hover:bg-card"
       >
         {content}
       </Link>
     );
   }
   return (
-    <div className="rounded-lg border border-border/60 bg-card/50 p-2.5">
+    <div className="min-w-0 rounded-lg border border-border/60 bg-card/50 p-2.5">
       {content}
     </div>
   );

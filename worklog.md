@@ -933,3 +933,51 @@ Stage Summary:
 Unresolved issues / risks / priority recommendations for next phase:
 - The four screenshots now have varying aspect ratios (1280x577, 1344x768, etc.). The project-card uses h-44/h-52 + object-cover so they crop uniformly, but if the user wants them to look more consistent, we could enforce a single 16:9 aspect ratio at source.
 - Could also add a lightbox feature (click to zoom the screenshot in fullscreen).
+
+---
+Task ID: USER-REQUEST-7
+Agent: main
+Task: Add 3 new certifications (eWPT, CyberOps Associate 200-201, SOC 101) + their Udemy verify URLs.
+
+User message:
+"agrega tambien esto a certificados: https://www.udemy.com/course/soc-101-introduccion-a-las-operaciones-de-seguridad/...   esto tambien: https://www.udemy.com/course/certificacion-cyberops-associate-200-201-curso-completo/...   https://www.udemy.com/course/certificacion-hacking-ewpt-pentesting-web/..."
++ 3 uploaded cert image files.
+
+Work Log:
+- Used VLM to extract certificate metadata from each uploaded image:
+  1. pasted_image_1792113153276.jpg → "SOC: Introducción a las Operaciones de Seguridad en empresas" · David Garay Miranda · 15 ene 2025 · 3.5h · Alvaro Chirou + Andrés Muro
+  2. pasted_image_1792113300484.jpg → "Certificación CyberOps Associate 200-201. Curso Completo." · David Garay Miranda · 23 ene 2025 · 16.5h · Alvaro Chirou + Andrés Muro
+  3. pasted_image_1792113594500.png → "Certificación de Hacking: EWPT Certifícate en Pentesting web" · David Garay Miranda · 15 oct 2026 · Alvaro Chirou + Walter Coto + Kevin Lopez
+- Copied the 3 images to /public/certs/ with clean names:
+  - cert-soc-101.jpg (265KB, 1600x1190)
+  - cert-cyberops-200-201.jpg (255KB, 1600x1190)
+  - cert-ewpt-pentesting-web.png (236KB, 1600x1190)
+- Updated src/components/portfolio/certifications.tsx:
+  * Added optional `url?: string` field to the Certification interface.
+  * Added the 3 new certs at the TOP of the CERTS array (most recent / most advanced first), each with the Udemy course URL the user provided.
+  * Added a "Ver en Udemy" footer link in the cert modal — a real <a href={selected.url} target="_blank"> button — shown only when the cert has a `url` set.
+- Verified via VLM on the Certifications section screenshot:
+  * "Certificación de Hacking: eWPT · Pentesting Web (2026)" — visible at top
+  * "Certificación CyberOps Associate 200-201 · Curso Completo (2025)" — visible second
+  * "SOC 101 · Introducción a las Operaciones de Seguridad (2025)" — visible third
+  * All 3 confirmed at the top in the order I placed them.
+- Verified via VLM on the eWPT modal screenshot:
+  * Certificate image is shown.
+  * "Ver en Udemy" link is at the bottom right, next to "Certificado verificable en Udemy".
+- bun run lint: clean.
+- Git: committed as "certs: add eWPT, CyberOps Associate 200-201, SOC 101 + Udemy verify links" (65ddd39). Pushed to origin main (3ca40e3..65ddd39). Success.
+
+Stage Summary:
+- Certifications section now has 10 certificates total (3 new at the top + 7 existing).
+- 3 new certs placed at the top, most recent / most advanced first:
+  1. eWPT · Pentesting Web (2026)
+  2. CyberOps Associate 200-201 (2025, 16.5h)
+  3. SOC 101 (2025, 3.5h)
+- All 3 new certs include a "Ver en Udemy" link in the modal so anyone can verify them on the official Udemy course pages.
+- Optional `url` field on the Certification interface means future certs can also be made verifiable with zero extra UI work.
+- Pushed to GitHub (origin main, 65ddd39).
+
+Unresolved issues / risks / priority recommendations for next phase:
+- The 7 older certs don't have Udemy URLs (the user didn't provide them) — they show only the cert image in the modal, no "Ver en Udemy" link. That's fine — the field is optional.
+- The cert grid now has 10 items (3+3+3+1 layout on lg screens). The last row has a single card alone — could be visually balanced by reordering or by adding a "More certs" teaser card.
+- For SEO / structured data, could also expose the cert list in the JSON-LD schema (hasCredential / EducationalOccupationalCredential) — currently no such schema is emitted.

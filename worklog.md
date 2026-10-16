@@ -981,3 +981,47 @@ Unresolved issues / risks / priority recommendations for next phase:
 - The 7 older certs don't have Udemy URLs (the user didn't provide them) — they show only the cert image in the modal, no "Ver en Udemy" link. That's fine — the field is optional.
 - The cert grid now has 10 items (3+3+3+1 layout on lg screens). The last row has a single card alone — could be visually balanced by reordering or by adding a "More certs" teaser card.
 - For SEO / structured data, could also expose the cert list in the JSON-LD schema (hasCredential / EducationalOccupationalCredential) — currently no such schema is emitted.
+
+---
+Task ID: USER-REQUEST-8
+Agent: main
+Task: Show the ID badge card on mobile (was previously hidden with `hidden lg:block`).
+
+User message:
+"haz que en el movil tambien se vea mi tarjeta de presentacion por favor"
+
+Work Log:
+- Diagnosed: src/components/portfolio/hero.tsx had `<div className="hidden shrink-0 lg:block">` around `<IdBadge />` — the card was completely hidden on mobile and only appeared on lg+ (≥1024px) screens.
+- Updated src/components/portfolio/hero.tsx:
+  * Removed `hidden lg:block` so the card shows at every breakpoint.
+  * Added responsive width: `w-[16rem]` on mobile → `sm:w-[20rem]` → `lg:w-auto` (auto width on desktop keeps the original layout).
+  * Added `self-center` on mobile so the card centers horizontally below the text content (flex-col layout), `lg:self-start` to keep top-alignment on desktop.
+  * Reduced hero top padding on mobile: `pt-32` → `pt-20 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28` (less padding on mobile so more content fits).
+  * Tightened the gap between text column and card: `gap-8` → `gap-2 sm:gap-4 lg:gap-8`.
+- Updated src/components/portfolio/id-badge.tsx:
+  * Replaced the inline `style={{ width: "100%", height: "500px" }}` with responsive Tailwind classes: `h-[280px] w-full sm:h-[400px] lg:h-[500px]`. Inline style would have overridden Tailwind responsive classes, so removing it was required.
+  * Updated the dynamic-import loading spinner to match the same responsive heights.
+- Iterated on the dimensions to make the card FULLY fit in the initial mobile viewport (844px tall on iPhone 14):
+  * First try h-[420px] → bottom cut off by 38px (card extended past viewport).
+  * Then h-[360px] → still cut off by 38px.
+  * Then h-[300px] + pt-24 → still cut off by 14px.
+  * Final: h-[280px] + pt-20 + gap-2 → fits perfectly (card bottom 838 ≤ viewport 844).
+- Verified via agent-browser:
+  * Mobile 390x844 (iPhone 14): card fits in viewport (lanyard parent bbox 256×280, top=558, bottom=838, viewportH=844, fitsInViewport=true). VLM confirmed: photo of David Garay visible, name "David Garay" visible, barcode visible, top logo + green online status visible.
+  * Tablet 768x1024: card 320×400, fits (bottom 993 ≤ 1024).
+  * Desktop 1440x900: card on right side of hero next to headline — original two-column layout preserved. VLM confirmed: card with photo + name + barcode visible on the right, headline + bio + CTAs + stats visible on the left.
+- bun run lint: clean.
+- Git: committed as "hero: show ID badge card on mobile too (responsive height + width)" (e206da9). Pushed to origin main (65ddd39..e206da9). Success.
+
+Stage Summary:
+- ID badge card is now visible on mobile, tablet, and desktop. Previously hidden below lg breakpoint.
+- Card fully fits in the initial mobile viewport (no scroll needed to see the whole card).
+- Desktop layout unchanged — two-column with card on the right.
+- Mobile layout: card stacks below the headline + bio + CTAs, centered horizontally.
+- Hero padding tightened on mobile so all hero content (badge + headline + buttons) fits in one screen on small phones.
+- Pushed to GitHub (origin main, e206da9).
+
+Unresolved issues / risks / priority recommendations for next phase:
+- On very small phones (≤360px wide), the card might still feel a bit tight. Could add a `xs:` breakpoint if needed.
+- The card content (name, barcode) is small but legible per VLM. If user wants even bigger card on mobile, could remove the stats row from the hero on mobile and move it elsewhere, freeing up vertical space for a taller card.
+- Several other files in the repo were modified by the recurring 15-min webDevReview cron job (bun.lock, card-front.png, icon-512.png, build scripts, shapewaves/*, lanyard/*). Those changes are NOT part of this commit — they'll need a separate review/commit. The user should be aware that the cron job is autonomously editing files every 15 minutes.

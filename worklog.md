@@ -1070,3 +1070,41 @@ Unresolved issues / risks / priority recommendations for next phase:
 - The same `display: grid` issue could affect other modals that use the shadcn/ui Dialog component with long content. The `min-w-0` fix is applied per-modal in project-modal.tsx — a more permanent fix would be to add `min-w-0` to the DialogContent base class in src/components/ui/dialog.tsx so all dialogs are safe by default. Worth doing if more modals are added.
 - The URL wraps awkwardly as "notesapp.deividtech.clo" + "ud" — that's because `break-all` allows breaking mid-word at any character. Could use `break-words` (only break at word boundaries) for slightly nicer wrapping, but for URLs without spaces, `break-all` is the right choice.
 - Could also add `overflow-wrap: anywhere` to the longDescription paragraph as a defensive measure against very long unbreakable strings.
+
+---
+Task ID: USER-REQUEST-10
+Agent: main
+Task: REMOVE the "4 SISTEMAS EN PRODUCCIÓN" badge from the ID badge card — the count belongs in the hero stats grid, NOT on the presentation card.
+
+User message:
+"animal aqui es donde debias colocar 4sistemas en produccion no en mi tarjeta de presentacion tarado corrige eso" + screenshot of the hero stats card showing "3 Sistemas en producción".
+
+Work Log:
+- Looked at user's uploaded screenshot (pasted_image_1792156264030.png, 328x215). It shows the hero stats grid widget that displays "3" + "Sistemas en producción" label — that's where the "4" should go, NOT on the ID badge card.
+- Realized my mistake: in the previous task I added a green "4 SISTEMAS EN PRODUCCIÓN" badge to the card-front.png. The user wanted it in the stats grid (where I had ALSO updated it to "4"). The card badge was redundant and wrong.
+- Reverted the card-front.png changes:
+  * Removed the entire "4 SISTEMAS EN PRODUCCIÓN" badge section from scripts/build_card_front.py (the green badge with big "4" + label + subtext).
+  * Rebuilt public/card-front.png at 1024x1440 without the badge — now 191KB (was 198KB with badge).
+  * Kept the other improvements: 1024x1440 resolution (matches Lanyard FACE_WIDTH exactly, no upscaling = sharp text) + finish="matte" (vs glossy = no clearcoat glare).
+- Verified via VLM directly on the rebuilt card-front.png:
+  * Card no longer contains "4 SISTEMAS EN PRODUCCIÓN" text.
+  * Card shows cleanly: DT logo, DEIVID TECH, ENGINEERING, LIVE, headshot (Dior hoodie), "David Garay", "Full-Stack Developer · Ciberseguridad · IA", "Paraguay · Remoto", "STACK EN PRODUCCIÓN" tech logos, barcode, "ID · 2025-DT-PY-001", "deividtech.cloud · davidgaray849@gmail.com".
+- Verified the hero stats grid still shows "4 Sistemas en producción" (was updated in the previous commit — hero.tsx value "3" → "4", i18n.ts badge "3 sistemas" → "4 sistemas" in both ES and PT).
+- Created /home/z/my-project/FIXES_LOG.md at the start of this task to track every fix from now on (as the user requested: "anota cada fix para corregirlo a partir de ahora"). Logged:
+  * Fix #1: blurry card (glossy → matte + texture 864x1152 → 1024x1440)
+  * Fix #2: 4 sistemas badge (initial wrong placement on ID card → reverted; correct location is hero stats grid)
+  * Lección anotada: cuando el usuario dice "card" puede referirse a la stats card del hero, no necesariamente a la tarjeta de presentación.
+- bun run lint: clean.
+- Git: committed as "card: remove '4 SISTEMAS EN PRODUCCIÓN' badge from ID card" (209c436). Pushed to origin main (99cbba8..209c436). Success.
+
+Stage Summary:
+- ID badge card (card-front.png) is clean again — no "4 SISTEMAS EN PRODUCCIÓN" badge. Headshot + name + title + location + tech logos + barcode + ID + footer.
+- Hero stats grid shows "4 Sistemas en producción" (correct location for the count).
+- Hero pill badge shows "Portfolio · 4 sistemas en producción".
+- The card stays sharp (matte finish + 1024x1440 texture matching Lanyard FACE_WIDTH).
+- New FIXES_LOG.md file created to track every fix from now on, as requested.
+- Pushed to GitHub (origin main, 209c436).
+
+Unresolved issues / risks / priority recommendations for next phase:
+- Always double-check the user's intent when they say "card" — could be the ID badge, the stats card, or the project card. Better to ask for clarification when ambiguous.
+- The webDevReview cron job has been auto-committing changes (UUID messages) without my involvement. I should review what it's touching in case it conflicts with the user's manual requests.

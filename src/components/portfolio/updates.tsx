@@ -305,7 +305,7 @@ function UpdateModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[90vh] max-w-2xl gap-0 overflow-hidden p-0">
+      <DialogContent className="flex max-h-[90vh] max-w-2xl flex-col gap-0 overflow-hidden p-0">
         <AnimatePresence>
           {post && (
             <motion.div
@@ -314,6 +314,7 @@ function UpdateModal({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              className="flex min-h-0 min-w-0 flex-col"
             >
               {/* Banner */}
               <div className="relative h-24 overflow-hidden bg-gradient-to-br from-primary/20 via-primary/10 to-transparent">
@@ -343,8 +344,8 @@ function UpdateModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="max-h-[70vh] overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
-                <div className="space-y-4 py-4">
+              <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
+                <div className="min-w-0 space-y-4 py-4">
                   {post.body.map((para, idx) => (
                     <p
                       key={idx}

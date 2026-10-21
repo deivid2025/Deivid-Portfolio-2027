@@ -111,7 +111,7 @@ export function ProjectModal({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[90vh] max-w-3xl gap-0 overflow-hidden p-0 sm:max-w-3xl">
+      <DialogContent className="flex max-h-[90vh] max-w-3xl flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl">
         <AnimatePresence>
           {project && (
             <motion.div
@@ -120,7 +120,7 @@ export function ProjectModal({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="min-w-0"
+              className="flex min-h-0 min-w-0 flex-col"
             >
               {/* Cover banner — real screenshot */}
               <div className="relative h-40 overflow-hidden sm:h-48">
@@ -158,7 +158,7 @@ export function ProjectModal({
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="max-h-[70vh] min-w-0 overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
+              <div className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-5 pb-4 sm:px-6 scrollbar-thin">
                 <div className="min-w-0 space-y-6 py-4">
                   {/* Quick facts */}
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

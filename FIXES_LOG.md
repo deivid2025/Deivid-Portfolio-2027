@@ -43,3 +43,28 @@ Agregué "4 SISTEMAS EN PRODUCCIÓN" como badge verde en el `card-front.png` (la
 - Verificar que la tarjeta de presentación (ID badge) se vea nítida (no borrosa) en móvil también — el finish matte + textura 1024×1440 debería haberlo resuelto, pero falta verificación móvil.
 
 ---
+
+## 2026-10-21 — Fix #3: Modal overflow on mobile (footer clipped below viewport)
+
+**Síntoma reportado por el usuario:**
+"hay bug en la seccion de ver detalle en las crad en el movil en la seccion de devlog y novedades se rompen o se desborden favor corregir eso ahora mismo [...] vea que en ningun parte hay ese bug en moviles laptops o computadores"
+
+**Causa raíz:**
+En ambos modales (ProjectModal y UpdateModal), el contenido apilado verticalmente sumaba más altura que el max-h-[90vh] del modal:
+- banner (~217px) + header (~70px) + scroll area (max-h-[70vh]=591px) + footer (~57px) = ~935px
+- modal max-h-[90vh] = 760px en iPhone 14 (844px viewport)
+- Resultado: el footer se empujaba ~175px por debajo del bottom del modal, y `overflow-hidden` lo recortaba → los botones "Visitar / Compartir / Cerrar" no se veían en móvil.
+
+**Fix aplicado:**
+- `DialogContent`: cambié de `grid` (default de shadcn/ui) a `flex flex-col` para que los children se apilen verticalmente y el scroll area pueda flexar.
+- `motion.div`: agregué `flex min-h-0 min-w-0 flex-col` para que el grid item pueda encojerse y los children puedan flexar.
+- Scroll area: reemplacé `max-h-[70vh]` por `flex-1 min-h-0` — así toma el espacio restante entre header y footer, en vez de un valor fijo que chocaba con el resto.
+- Aplicado a `src/components/portfolio/project-modal.tsx` y `src/components/portfolio/updates.tsx`.
+
+**Verificación:**
+- Móvil 390×844: modal h=760, scroll area h=425 (dentro del modal), footer visible (top=752, bottom=802). ✅
+- Tablet 768×1024: modal h=870, fits viewport (bottom 947 ≤ 1024). ✅
+- Desktop 1440×900: modal h=810, fits viewport (bottom 855 ≤ 900). ✅
+- VLM confirmó en los 3 viewports: footer buttons visibles, texto completo, sin recortes.
+
+---

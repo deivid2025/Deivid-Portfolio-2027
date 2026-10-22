@@ -68,3 +68,35 @@ En ambos modales (ProjectModal y UpdateModal), el contenido apilado verticalment
 - VLM confirmó en los 3 viewports: footer buttons visibles, texto completo, sin recortes.
 
 ---
+
+## 2026-10-22 — Fix #4: Card color + modal footer buttons
+
+**Síntomas reportados por el usuario:**
+"verifica que el boton de abrir rpoyecto compartir y cerrar se ven muy fea vas a verificar todas las crad si en elgun lado hay desborde o se ven feas en movil y en toda la web [...] el color de la card de David garay se ve difuminada o borrosa corregir eso y que tenga el mismo color de la paleta de la web no negro oscuro como la que teine hoy dia"
+
+**Causa raíz:**
+1. ID badge card surface usaba color puro `#0a0a0a` (10,10,10), que era MÁS OSCURO que el `--background` de la página (12,12,12). El card se veía hundido en el fondo en vez de elevado.
+2. Footer de los modales (project-modal.tsx + updates.tsx) usaba `flex flex-wrap` con 3 buttons de `h-8` (32px) — en móvil los botones se aplastaban, hacían wrap a 2 líneas, y se veían feos. Variantes inconsistentes (default/outline/ghost) creaban peso visual desbalanceado.
+
+**Fix aplicado:**
+1. **Color de la card** (`scripts/build_card_front.py`):
+   - Cambié `BG` de `(10, 10, 10)` → `(22, 23, 28)` (~#16171C) — ligeramente más claro que el page bg, con leve tinte azul (cool gray) para matchear la paleta oklch(0.16 0.002 240) del website.
+   - Actualicé `Lanyard cardColor` prop de `#0a0a0a` → `#16171c` (mismo color que la textura del card-front.png).
+   - Cambié green accent a `RGB(52, 211, 153)` (emerald-400, matching palette, no warm tones).
+2. **Footer de los modales** (`project-modal.tsx` + `updates.tsx`):
+   - Removí `flex flex-wrap` y `overflow-hidden`.
+   - Nuevo layout single-row: CTA primario `flex-1` (toma el espacio restante en móvil, fixed-width en desktop), botones secundarios `shrink-0 h-10` con icon-only en móvil + texto en sm+.
+   - Toqué view count: solo visible en sm+ (`hidden sm:flex`).
+   - Mismo patrón aplicado al devlog modal (Compartir + Cerrar).
+3. **Auditoría completa** vía agent-browser + VLM:
+   - **Mobile 390×844**: revisé las 9 secciones (hero, work, about, services, process, certs, blog, faq, contact). VLM confirmó: "All sections look fine on mobile".
+   - **Desktop 1440×900**: revisé 7 secciones. VLM confirmó: "All sections look fine on desktop".
+   - **Body horizontal scroll**: htmlScrollW = clientW = 390 → no hay scrollbar horizontal.
+   - Las 2 secciones con scrollWidth > clientWidth (`#top` y `#stack`) tienen `overflow:hidden` visual clipping — son decorativos (ShapeWaves dot grid + radial glow), no causan scroll visible.
+
+**Verificación VLM:**
+- ID badge card: "not pure black, matches website palette, slightly lighter than page bg, subtle blue/cool tint, text highly readable" ✅
+- Project modal footer (mobile): "cleanly laid out, single row, Abrir proyecto primary CTA takes most space, Compartir + Cerrar compact icon buttons" ✅
+- Project modal footer (desktop): "single row, 4 elements aligned, 591 vistas visible at far right" ✅
+
+---

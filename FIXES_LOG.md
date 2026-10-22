@@ -100,3 +100,44 @@ En ambos modales (ProjectModal y UpdateModal), el contenido apilado verticalment
 - Project modal footer (desktop): "single row, 4 elements aligned, 591 vistas visible at far right" ✅
 
 ---
+
+## 2026-10-22 — Fix #5: Card super borrosa (text + barcode illegible)
+
+**Síntoma reportado por el usuario:**
+"a simple vista se ve que esta super borrosa corrijela te dije que la crad no seve ni puta mierda vealo por ti mismo o desde el navegador" + screenshot mobile/desktop del card area mostrando text y barcode borrosos.
+
+**Causa raíz:**
+El Lanyard WebGL canvas renderizaba al DPR nativo del dispositivo (1x en displays estándar, 2x en Retina). En un display 1x:
+- Container: 1000×500 CSS px
+- Canvas: 1000×500 actual px (DPR=1)
+- Card en pantalla: ~325px tall
+- Texture: 1024×1440 px
+- **Downsample ratio: 4.4x → blurry text + illegible barcode**
+
+A esto se sumaba:
+- `LinearMipmapLinearFilter` default → mipmaps elegían versiones de baja resolución de la textura, blur adicional.
+- `size=0.65` → card chica en pantalla.
+- `finish="matte"` (roughness 0.85) → surface difusa suavizaba los bordes del text.
+
+**Fix aplicado (3 cambios):**
+
+1. **`Lanyard.tsx` → `makeCanvasTexture`**: desactivé mipmaps (`generateMipmaps = false`) + `minFilter = LinearFilter` + `magFilter = LinearFilter`. La textura ahora se samplea siempre a resolución completa, sin elegir niveles mipmap de baja resolución.
+
+2. **`Lanyard.tsx` → `resize`**: forcé minimum 3x pixel ratio: `Math.max(3, Math.min(dpr, 3))`. El canvas ahora renderiza a:
+   - Desktop: 3000×1500 actual px (vs 1000×500 antes)
+   - Mobile: 768×840 actual px (vs 512×560 antes)
+   
+   Costo GPU extra aceptable para una sola card 3D.
+
+3. **`id-badge.tsx`**: bump `size` 0.65 → 0.78 (card más grande en pantalla = menos downsample). Switched `finish` "matte" → "glossy" — el clearcoat liso del glossy hace que el text se vea más crisper que la surface difusa del matte.
+
+**Verificación VLM:**
+
+| Viewport | Canvas actual px | Card screen px | Downsample | VLM verdict |
+|---|---|---|---|---|
+| Desktop 1440×900 | 3000×1500 | ~975 tall | 1.48x | ✅ "barcode sharp, text crisp, photo clear details" |
+| Mobile 390×844 | 768×840 | ~210 tall | 1.18x | ✅ "barcode sharp distinct lines, name crisp and highly legible, logos rendered clearly" |
+
+**Lección anotada:** Cuando un texture 3D se ve blurry, las causas típicas son (en orden): mipmapping agresivo, DPR bajo del canvas, texture chica vs screen size. Siempre verificar el ratio `texture_size / screen_size` — si > 3x, va a verse blurry sin imports del filter.
+
+---

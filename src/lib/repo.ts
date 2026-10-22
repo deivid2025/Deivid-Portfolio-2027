@@ -176,16 +176,35 @@ export async function ensureTestimonialSeeds(): Promise<void> {
 let seedProjectsInFlight: Promise<void> | null = null;
 
 export async function ensureProjectSeeds(): Promise<void> {
-  const count = await db.projectRow.count();
-  if (count > 0) return;
   if (!seedProjectsInFlight) {
     seedProjectsInFlight = (async () => {
-      const c = await db.projectRow.count();
-      if (c > 0) return;
+      // Always upsert every project from the static seed list. This is
+      // idempotent and means new projects added to projects.ts will
+      // automatically appear in the admin/project list without needing to
+      // wipe the DB. Existing rows are kept (their updatedAt is bumped)
+      // so view counts and other DB-only fields stay intact.
       for (const p of projects) {
         await db.projectRow.upsert({
           where: { slug: p.slug },
-          update: {},
+          update: {
+            name: p.name,
+            tagline: p.tagline,
+            category: p.category,
+            status: p.status,
+            year: p.year,
+            url: p.url,
+            accent: p.accent,
+            icon: p.icon,
+            screenshot: p.screenshot,
+            summary: p.summary,
+            description: p.description,
+            longDescription: p.longDescription,
+            features: JSON.stringify(p.features),
+            metrics: JSON.stringify(p.metrics),
+            techStack: JSON.stringify(p.techStack),
+            highlights: JSON.stringify(p.highlights),
+            audience: p.audience,
+          },
           create: {
             slug: p.slug,
             name: p.name,

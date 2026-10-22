@@ -171,7 +171,7 @@ const es: Dict = {
     home: "Inicio",
   },
   hero: {
-    badge: "Portfolio · 4 sistemas en producción",
+    badge: "Portfolio · 5 sistemas en producción",
     greeting: (name) => `Hola, soy ${name}.`,
     typingWords: [
       "full-stack developer",
@@ -317,7 +317,7 @@ const es: Dict = {
     badge: "Testimonios",
     title: "Lo que dicen mis clientes",
     subtitle:
-      "Reviews reales de los cuatro sistemas en producción y de proyectos a medida.",
+      "Reviews reales de los cinco sistemas en producción y de proyectos a medida.",
     cta: "¿Querés ser el próximo caso de éxito? Hablemos.",
     next: "Testimonio siguiente",
     prev: "Testimonio anterior",
@@ -422,7 +422,7 @@ const pt: Dict = {
     home: "Início",
   },
   hero: {
-    badge: "Portfólio · 4 sistemas em produção",
+    badge: "Portfólio · 5 sistemas em produção",
     greeting: (name) => `Olá, sou ${name}.`,
     typingWords: [
       "full-stack developer",
@@ -568,7 +568,7 @@ const pt: Dict = {
     badge: "Depoimentos",
     title: "O que meus clientes dizem",
     subtitle:
-      "Reviews reais dos quatro sistemas em produção e de projetos sob medida.",
+      "Reviews reais dos cinco sistemas em produção e de projetos sob medida.",
     cta: "Quer ser o próximo caso de sucesso? Vamos conversar.",
     next: "Depoimento seguinte",
     prev: "Depoimento anterior",

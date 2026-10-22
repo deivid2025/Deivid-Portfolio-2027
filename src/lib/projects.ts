@@ -323,6 +323,78 @@ export const projects: Project[] = [
     audience:
       "Cualquiera que quiera productividad que no aburre. Para los que odian Trello pero aman los animes.",
   },
+  {
+    slug: "gymbro-trainer",
+    name: "GymBro Trainer",
+    tagline: "Guía de ejercicios ilustrada con prescripción científica y mapas musculares interactivos",
+    category: "Producto SaaS",
+    status: "live",
+    year: "2026",
+    url: "https://gymbrotraine.deividtech.cloud/",
+    accent: "from-zinc-700 via-zinc-800 to-zinc-900",
+    icon: "Dumbbell",
+    screenshot: "/screenshots/gymbro-trainer.png",
+    summary:
+      "302 ejercicios ilustrados paso a paso, prescripción científica, mapas musculares interactivos y cálculo de calorías — todo en español LATAM para que sepas qué músculo trabajás y cómo.",
+    description:
+      "Catálogo de ejercicios para LATAM con ilustraciones anatómicas, instrucciones paso a paso, prescripción científica por objetivo y mapas musculares interactivos. Dark mode nativo, sin login.",
+    longDescription:
+      "GymBro Trainer es una guía de ejercicios pensada para el mercado LATAM. Reúne 302 ejercicios ilustrados con dibujos anatómicos estilo line-art, cada uno con instrucciones paso a paso, prescripción científica (series, reps, descanso, tempo) según el objetivo del usuario, mapa muscular interactivo que te muestra qué músculos estás trabajando, y cálculo de calorías estimadas por sesión. Todo en español neutro LATAM, dark y light mode nativo, sin cuentas ni login — entrás y entrenás. Creado por DeividTech Labs para que la gente de LATAM tenga una referencia seria y bien diseñada en vez de traducciones mal hechas de apps en inglés.",
+    features: [
+      {
+        title: "302 ejercicios ilustrados",
+        description:
+          "Catálogo completo con ilustraciones anatómicas line-art de cada movimiento y su técnica correcta.",
+      },
+      {
+        title: "Prescripción científica",
+        description:
+          "Series, reps, descanso y tempo recomendados según el objetivo del usuario (fuerza, hipertrofia, resistencia).",
+      },
+      {
+        title: "Mapa muscular interactivo",
+        description:
+          "Tocás un ejercicio y te muestra qué músculos primarios y secundarios estás trabajando.",
+      },
+      {
+        title: "Cálculo de calorías",
+        description:
+          "Estimación de gasto calórico por sesión según peso, duración e intensidad del entrenamiento.",
+      },
+      {
+        title: "100% español LATAM",
+        description:
+          "Interfaz, descripciones y prescripciones en español neutro pensado para LATAM. Sin traducciones raras.",
+      },
+      {
+        title: "Sin cuentas ni login",
+        description:
+          "Entrás directo, explorás, entrenás. Cero fricción, cero formulario, dark mode nativo.",
+      },
+    ],
+    metrics: [
+      { label: "Ejercicios", value: "302" },
+      { label: "Idioma", value: "ES LATAM" },
+      { label: "Mapas musculares", value: "Sí" },
+      { label: "Cuentas", value: "0" },
+    ],
+    techStack: [
+      { name: "Next.js", category: "frontend" },
+      { name: "React", category: "frontend" },
+      { name: "TypeScript", category: "frontend" },
+      { name: "Tailwind CSS", category: "frontend" },
+      { name: "Canvas API", category: "frontend" },
+      { name: "Local Storage", category: "tooling" },
+    ],
+    highlights: [
+      "302 ejercicios ilustrados",
+      "Prescripción científica por objetivo",
+      "Mapa muscular interactivo",
+      "100% español LATAM",
+    ],
+    audience:
+      "Gente de LATAM que entrena y quiere una guía seria y bien diseñada de ejercicios con técnica correcta, en vez de traducciones mal hechas de apps en inglés.",
+  },
 ];
 
 export const profile = {
@@ -340,7 +412,7 @@ export const profile = {
   longBio:
     "Estudié programación con Python y de ahí salté al ecosistema web. Hoy trabajo con React, Next.js, TypeScript, Docker, PostgreSQL y Supabase. Pero no solo programo. También me dedico a la ciberseguridad y el hacking ético. Hice cursos de Kali Linux a nivel intermedio avanzado, hacking ético ofensivo en Red Team, configuración de firewalls y pentesting. Combino el desarrollo con la seguridad para que mis productos no solo funcionen sino que estén protegidos. Uso IA todos los días. ChatGPT, Claude, Cursor y Codex son parte de cómo trabajo. Soy una persona amigable y gracias a la programación conocí gente en varios países. Tengo un gran amigo en España con el que ya van muchos años de charlas y proyectos. Me encanta compartir lo que aprendo y siempre estoy dispuesto a charlar sobre ideas nuevas y oportunidades.",
   stats: [
-    { label: "Sistemas en producción", value: "4" },
+    { label: "Sistemas en producción", value: "5" },
     { label: "Líneas de código", value: "50k+" },
     { label: "Tecnologías dominadas", value: "15+" },
     { label: "Años desarrollando", value: "5+" },
@@ -385,6 +457,11 @@ export const profile = {
       label: "NotesApp",
       url: "https://notesapp.deividtech.cloud/",
       icon: "Sticker",
+    },
+    {
+      label: "GymBro",
+      url: "https://gymbrotraine.deividtech.cloud/",
+      icon: "Dumbbell",
     },
   ],
 };

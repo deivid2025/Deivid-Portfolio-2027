@@ -14,6 +14,7 @@ import {
   Code2,
   Github,
   ShieldCheck,
+  Dumbbell,
   type LucideIcon,
 } from "lucide-react";
 
@@ -30,6 +31,7 @@ const MAP: Record<string, LucideIcon> = {
   Code2,
   Github,
   ShieldCheck,
+  Dumbbell,
 };
 
 export function DynamicIcon({

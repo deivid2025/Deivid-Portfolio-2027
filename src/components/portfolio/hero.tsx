@@ -168,7 +168,7 @@ export function Hero() {
           className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6"
         >
           {[
-            { value: "4", label: t.hero.stats.systems },
+            { value: "5", label: t.hero.stats.systems },
             { value: "50k+", label: t.hero.stats.lines },
             { value: "15+", label: t.hero.stats.techs },
             { value: "5+", label: t.hero.stats.years },

@@ -333,6 +333,15 @@ const makeCanvasTexture = (canvas, anisotropy) => {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = anisotropy;
+  // Disable mipmaps + use LinearFilter for both min/mag so the text on the
+  // card stays sharp even when the card renders at small screen sizes
+  // (e.g. on non-Retina displays or when the viewport is narrow).
+  // The trade-off is slight aliasing on rotation, but the Lanyard animation
+  // is gentle (swaying) so the aliasing is minimal.
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
   return texture;
 };
 
@@ -1246,7 +1255,12 @@ const Lanyard = ({
     const resize = () => {
       view.width = Math.max(1, container.clientWidth);
       view.height = Math.max(1, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      // Force minimum 3x pixel ratio so the card text + barcode stay crisp
+      // even on small mobile viewports. Without this, the 1024×1440 card
+      // texture gets downsampled 5-7x when the card renders at ~200-300px
+      // tall on screen, causing visible blur on text and the fine barcode
+      // lines. The extra GPU cost is acceptable for a single 3D card.
+      renderer.setPixelRatio(Math.max(3, Math.min(window.devicePixelRatio || 1, 3)));
       renderer.setSize(view.width, view.height, false);
       apply();
       render();

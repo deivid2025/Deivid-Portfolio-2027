@@ -19,9 +19,9 @@ export function IdBadge() {
         frontImage="/card-front.png"
         cardColor="#16171c"
         orientation="portrait"
-        finish="matte"
+        finish="glossy"
         cornerRadius={0.15}
-        size={0.65}
+        size={0.78}
         anchor="center"
         strapLength={0.4}
         strapColor="#1a1a1a"

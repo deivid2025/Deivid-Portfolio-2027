@@ -141,3 +141,55 @@ A esto se sumaba:
 **Lección anotada:** Cuando un texture 3D se ve blurry, las causas típicas son (en orden): mipmapping agresivo, DPR bajo del canvas, texture chica vs screen size. Siempre verificar el ratio `texture_size / screen_size` — si > 3x, va a verse blurry sin imports del filter.
 
 ---
+
+## 2026-10-22 — Feature: Visitor tracking (país + dispositivo)
+
+**Pedido del usuario:**
+"ahora quiero ver de que pais me estan visitando corrihe eso por favor y registra los dispositivos mas pais"
+
+**Feature implementada:**
+
+1. **Prisma `Visitor` model** (schema.prisma):
+   - `ipHash` unique (SHA-256 of `IP + daily_salt + deviceType`) — para deduplear por (IP, día, dispositivo) sin guardar la IP cruda
+   - `country` (ISO 3166-1 alpha-2: PY, AR, US…), `countryName`, `city`, `region`
+   - `deviceType` (mobile/tablet/desktop/bot), `os`, `browser`
+   - `visits` counter, `firstSeenAt`, `lastSeenAt`
+   - Indexed por country/deviceType/lastSeenAt
+
+2. **API `/api/visitors/track` (POST)**:
+   - Extrae IP de `X-Forwarded-For` o `X-Real-IP`
+   - Geolocaliza con `ip-api.com` (gratis, sin API key, 45 req/min)
+   - Parsea User-Agent → deviceType/OS/browser (sin lib externa)
+   - Upsert por ipHash (incrementa visits + actualiza lastSeenAt)
+   - Cachea la geolocation por IP por request
+
+3. **API `/api/visitors/stats` (GET, admin-only)**:
+   - Aggrega todos los Visitor rows en JS (sin GROUP BY raw SQL)
+   - Devuelve: totals (totalVisits, uniqueVisitors, 24h, 7d), topCountries, topDevices, topOs, topBrowsers
+
+4. **VisitorTracker client component**:
+   - Mount: dispara un solo POST por sesión (throttled via sessionStorage)
+   - Usa sendBeacon o fetch con keepalive para sobrevivir page unloads
+   - Delay 1.5s para no bloquear first paint
+
+5. **Admin dashboard — tab "Visitantes"**:
+   - 4 totals cards: visitas totales / 24h / 7d / # países
+   - 4 bar lists con progress bars animados:
+     - Países con flags 🇵🇾🇦🇷🌐
+     - Dispositivos (mobile/tablet/desktop/bot)
+     - OS (Windows/macOS/Android/iOS/Linux…)
+     - Browsers (Chrome/Safari/Firefox/Edge/Opera…)
+   - Privacy note abajo explicando el salted-hash approach
+
+**Privacidad:**
+- IP cruda NUNCA se guarda. Se hashea con SHA-256 + sal diaria.
+- La sal rota por día → una IP que visita hoy y mañana se trackea como 2 rows distintos (uno por día), pero la IP cruda nunca se puede derivar del hash.
+- Si el mismo IP usa 2 dispositivos, se trackea como 2 rows distintos (deviceType está incluido en el hash) → preserva la distribución por dispositivo.
+
+**Verificación:**
+- curl con UA iPhone (Android), Mac Edge, Mac Chrome → todas las requests se trackearon correctamente.
+- Stats API devolvió: 5 visitas totales, 2 unique, desktop 3 + mobile 2, macOS 5, Edge 3 + Chrome 2.
+- Admin Visitantes tab renderiza los 4 bar lists con progress bars animados.
+- VLM confirmó: 'macOS 5 (100%); Edge 3 (60%), Chrome 2 (40%)'.
+
+---

@@ -193,3 +193,48 @@ A esto se sumaba:
 - VLM confirmó: 'macOS 5 (100%); Edge 3 (60%), Chrome 2 (40%)'.
 
 ---
+
+## 2026-10-22 — Feature: GymBro Trainer como 5to proyecto
+
+**Pedido del usuario:**
+"bien agrega esta app ahora : https://gymbrotraine.deividtech.cloud/ https://github.com/deivid2025/gymbrotraine... portada."
++ uploaded screenshot (1341×623) de la app GymBro.
+
+**Feature implementada:**
+
+1. **Screenshot**: copiada a `/public/screenshots/gymbro-trainer.png` (78KB, 1341×623).
+
+2. **Nuevo proyecto** en `src/lib/projects.ts`:
+   - slug: `gymbro-trainer`
+   - name: GymBro Trainer
+   - tagline: Guía de ejercicios ilustrada con prescripción científica y mapas musculares interactivos
+   - category: Producto SaaS, status: live, year: 2026
+   - url: https://gymbrotraine.deividtech.cloud/
+   - 6 features (302 ejercicios, prescripción científica, mapa muscular, calorías, español LATAM, sin login)
+   - metrics: Ejercicios 302, Idioma ES LATAM, Mapas musculares Sí, Cuentas 0
+   - techStack: Next.js, React, TypeScript, Tailwind, Canvas API, Local Storage
+   - icon: Dumbbell
+
+3. **Icon mapping**: añadido `Dumbbell` a `dynamic-icon.tsx` MAP + import desde lucide-react.
+
+4. **Stats actualizadas a 5 sistemas**:
+   - `hero.tsx`: value "4" → "5"
+   - `about.tsx`: value "4" → "5"
+   - `i18n.ts` ES: badge "4 sistemas" → "5 sistemas", "cuatro" → "cinco"
+   - `i18n.ts` PT: badge "4 sistemas" → "5 sistemas", "quatro" → "cinco"
+   - `projects.ts` profile.stats: 4 → 5
+
+5. **Socials**: añadido GymBro a `profile.socials` con icon Dumbbell.
+
+6. **Bug fix** en `src/lib/repo.ts` `ensureProjectSeeds()`:
+   - Antes: solo hacía upsert si el count era 0 (DB vacío). Como el DB ya tenía 4 proyectos, GymBro no se insertaba.
+   - Ahora: siempre upsertea todos los proyectos del seed list. Idempotente — los view counts y campos editados via admin se preservan porque `upsert.update` solo toca las columnas listadas.
+   - Esto también arregla el problema para futuras apps: agregar a `projects.ts` → aparece automáticamente en la API + admin.
+
+**Verificación:**
+- `GET /api/projects`: ahora devuelve 5 proyectos (antes 4). Slugs: factusheet-oboroscan, notesapp-uchiha, gymbro-trainer, despega-peelme, redline.
+- agent-browser: card visible en la grilla de proyectos con screenshot real (gym app interface), nombre "GymBro Trainer", categoría "2026 · PRODUCTO SAAS", descripción completa, tech badges (Next.js, React, TypeScript, Tailwind CSS, Canvas API), highlights, botones "Ver detalle" + "Visitar ↗", view count "0 vistas".
+- Hero pill badge: "Portfolio · 5 sistemas en producción" ✅
+- VLM confirmó: "302 ejercicios ilustrados, prescripción científica por objetivo, mapa muscular interactivo, 100% español LATAM" visibles en la card.
+
+---

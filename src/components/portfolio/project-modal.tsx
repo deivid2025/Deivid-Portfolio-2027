@@ -15,6 +15,7 @@ import {
   Share2,
   Check,
   Link2,
+  X,
 } from "lucide-react";
 import {
   Dialog,
@@ -309,40 +310,46 @@ export function ProjectModal({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 overflow-hidden border-t border-border/60 bg-card/40 px-3 py-3 sm:px-6">
-                <Button asChild size="sm" className="h-8 rounded-full text-xs sm:h-9 sm:text-sm">
+              <div className="flex items-center gap-2 border-t border-border/60 bg-card/40 px-3 py-3 sm:px-6">
+                {/* Primary CTA: takes the available space on mobile, sits left on desktop */}
+                <Button
+                  asChild
+                  size="sm"
+                  className="h-10 flex-1 justify-center rounded-full text-xs font-medium sm:flex-none sm:h-9 sm:text-sm"
+                >
                   <Link href={project.url} target="_blank" rel="noreferrer">
                     {t.project.open}
-                    <ArrowUpRight className="ml-1 h-3 w-3 sm:ml-1.5 sm:h-3.5 sm:w-3.5" />
+                    <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
+                {/* Secondary actions: compact icons on mobile, with text on sm+ */}
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 rounded-full text-xs sm:h-9 sm:text-sm"
+                  className="h-10 shrink-0 rounded-full px-3 sm:h-9 sm:px-4"
                   onClick={handleCopyShare}
+                  aria-label={copied ? t.project.copied : t.project.share}
                 >
                   {copied ? (
-                    <>
-                      <Check className="mr-1 h-3 w-3 text-foreground sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
-                      {t.project.copied}
-                    </>
+                    <Check className="h-3.5 w-3.5 text-foreground" />
                   ) : (
-                    <>
-                      <Share2 className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
-                      {t.project.share}
-                    </>
+                    <Share2 className="h-3.5 w-3.5" />
                   )}
+                  <span className="ml-1.5 hidden sm:inline">
+                    {copied ? t.project.copied : t.project.share}
+                  </span>
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 rounded-full text-xs sm:h-9 sm:text-sm"
+                  className="h-10 shrink-0 rounded-full px-3 text-muted-foreground hover:text-foreground sm:h-9 sm:px-4"
                   onClick={onClose}
                 >
-                  {t.project.close}
+                  <X className="h-3.5 w-3.5 sm:hidden" />
+                  <span className="hidden sm:inline">{t.project.close}</span>
                 </Button>
-                <span className="ml-auto hidden sm:inline">
+                {/* View count: only on sm+ where there's space */}
+                <span className="ml-auto hidden items-center sm:flex">
                   <ProjectViews slug={project.slug} />
                 </span>
               </div>

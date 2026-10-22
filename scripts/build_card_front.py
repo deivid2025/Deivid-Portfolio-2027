@@ -33,17 +33,26 @@ CARD_W, CARD_H = 1024, 1440
 # by S so the layout proportions are preserved at the new resolution.
 S = CARD_W / 864
 
-# --- Colors (monochrome dark aesthetic) ------------------------------------
-BG = (10, 10, 10)
-BG_SOFT = (22, 22, 22)
-TEXT_WHITE = (245, 245, 245)
-TEXT_GRAY = (160, 160, 160)
-TEXT_DIM = (110, 110, 110)
-ACCENT = (200, 200, 200)
-GRID = (28, 28, 28)
-# Accent green for "LIVE" status + systems badge (subtle, kept on-brand).
-GREEN = (34, 197, 94)
-GREEN_DARK = (22, 101, 52)
+# --- Colors (match the website's dark palette) ----------------------------
+# Website uses oklch(0.12 0.002 240) for --background (page bg) and
+# oklch(0.16 0.002 240) for --card. Sampled from the browser, the actual
+# rendered RGB values are:
+#   --background dark ≈ RGB(12, 12, 12)
+#   --card        dark ≈ RGB(12, 13, 14)
+# We make the card surface slightly LIGHTER than the page bg so the ID
+# badge visually "sits on top" of the page (matches the way real ID cards
+# look on a table — elevated, not sinking into the background).
+BG = (22, 23, 28)              # ~#16171C — slightly lighter than page bg, cool blue tint
+BG_SOFT = (32, 33, 40)        # for borders/elevations
+CARD_BG_DARK = (16, 17, 22)   # for inner panels (slightly darker than card surface)
+TEXT_WHITE = (245, 245, 247)
+TEXT_GRAY = (165, 167, 175)
+TEXT_DIM = (115, 117, 125)
+ACCENT = (200, 200, 205)
+GRID = (32, 33, 40)
+# Accent green for "LIVE" status (subtle, kept on-brand).
+GREEN = (52, 211, 153)        # emerald-400 — matches palette, no warm tones
+GREEN_DARK = (16, 80, 60)
 
 
 def s(value):
@@ -238,7 +247,7 @@ HS_R = HEAD_SIZE // 2
 draw.ellipse(
     [HS_CX - HS_R - s(8), HS_CY - HS_R - s(8),
      HS_CX + HS_R + s(8), HS_CY + HS_R + s(8)],
-    fill=(28, 28, 28),
+    fill=(32, 33, 40),
 )
 
 circle_mask = Image.new("L", (HEAD_SIZE, HEAD_SIZE), 0)

@@ -17,7 +17,7 @@ export function IdBadge() {
     <div className="h-[280px] w-full sm:h-[400px] lg:h-[500px]">
       <Lanyard
         frontImage="/card-front.png"
-        cardColor="#0a0a0a"
+        cardColor="#16171c"
         orientation="portrait"
         finish="matte"
         cornerRadius={0.15}

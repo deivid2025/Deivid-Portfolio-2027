@@ -12,6 +12,7 @@ import {
   Newspaper,
   Share2,
   Search,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -419,40 +420,42 @@ function UpdateModal({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-2 overflow-hidden border-t border-border/60 bg-card/40 px-3 py-3 sm:px-6">
+              <div className="flex items-center gap-2 border-t border-border/60 bg-card/40 px-3 py-3 sm:px-6">
+                {/* Context label: takes available space on mobile, truncated */}
                 <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                   {post.project
                     ? `${t.updates.about}: ${post.project}`
                     : t.updates.about}
                 </span>
-                <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 rounded-full text-xs sm:h-9 sm:text-sm"
-                    onClick={async () => {
-                      try {
-                        const url = window.location.href.split("?")[0] + `?update=${post.slug}#blog`;
-                        await navigator.clipboard.writeText(url);
-                        toast.success("Link del post copiado");
-                      } catch {
-                        toast.error("No pude copiar el link");
-                      }
-                    }}
-                  >
-                    <Share2 className="mr-1 h-3 w-3 sm:mr-1.5 sm:h-3.5 sm:w-3.5" />
-                    Compartir
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 rounded-full text-xs sm:h-9 sm:text-sm"
-                    onClick={onClose}
-                  >
-                    {t.updates.close}
-                    <ArrowUpRight className="ml-1 h-3 w-3 sm:ml-1 sm:h-3.5 sm:w-3.5" />
-                  </Button>
-                </div>
+                {/* Secondary action: compact icon on mobile, with text on sm+ */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-10 shrink-0 rounded-full px-3 sm:h-9 sm:px-4"
+                  aria-label="Compartir"
+                  onClick={async () => {
+                    try {
+                      const url = window.location.href.split("?")[0] + `?update=${post.slug}#blog`;
+                      await navigator.clipboard.writeText(url);
+                      toast.success("Link del post copiado");
+                    } catch {
+                      toast.error("No pude copiar el link");
+                    }
+                  }}
+                >
+                  <Share2 className="h-3.5 w-3.5" />
+                  <span className="ml-1.5 hidden sm:inline">Compartir</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-10 shrink-0 rounded-full px-3 text-muted-foreground hover:text-foreground sm:h-9 sm:px-4"
+                  onClick={onClose}
+                  aria-label={t.updates.close}
+                >
+                  <X className="h-3.5 w-3.5 sm:hidden" />
+                  <span className="hidden sm:inline">{t.updates.close}</span>
+                </Button>
               </div>
             </motion.div>
           )}

@@ -17,12 +17,14 @@ import { Footer } from "@/components/portfolio/footer";
 import { ScrollProgress } from "@/components/portfolio/scroll-progress";
 import { BackToTop } from "@/components/portfolio/back-to-top";
 import { QueryProvider } from "@/components/portfolio/query-provider";
+import { VisitorTracker } from "@/components/portfolio/visitor-tracker";
 
 export default function Home() {
   return (
     <QueryProvider>
       <ScrollProgress />
       <Navbar />
+      <VisitorTracker />
       <main className="flex-1">
         <Hero />
         <Marquee />

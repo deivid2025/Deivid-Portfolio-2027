@@ -22,6 +22,10 @@ import {
   Sparkles,
   Briefcase,
   Download,
+  Globe,
+  Smartphone,
+  Monitor,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -416,22 +420,31 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         <StatsRow />
 
         <Tabs defaultValue="messages" className="mt-6">
-          <TabsList className="grid w-full grid-cols-4 sm:w-auto sm:inline-flex">
+          <TabsList className="grid w-full grid-cols-5 sm:w-auto sm:inline-flex">
             <TabsTrigger value="messages" className="gap-1.5">
               <Inbox className="h-3.5 w-3.5" />
-              Mensajes
+              <span className="hidden sm:inline">Mensajes</span>
+              <span className="sm:hidden">Msjs</span>
             </TabsTrigger>
             <TabsTrigger value="updates" className="gap-1.5">
               <Newspaper className="h-3.5 w-3.5" />
-              Updates
+              <span className="hidden sm:inline">Updates</span>
+              <span className="sm:hidden">BLOG</span>
             </TabsTrigger>
             <TabsTrigger value="testimonials" className="gap-1.5">
               <Sparkles className="h-3.5 w-3.5" />
-              Testimonios
+              <span className="hidden sm:inline">Testimonios</span>
+              <span className="sm:hidden">Tst</span>
             </TabsTrigger>
             <TabsTrigger value="projects" className="gap-1.5">
               <Briefcase className="h-3.5 w-3.5" />
-              Proyectos
+              <span className="hidden sm:inline">Proyectos</span>
+              <span className="sm:hidden">Prj</span>
+            </TabsTrigger>
+            <TabsTrigger value="visitors" className="gap-1.5">
+              <Globe className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Visitantes</span>
+              <span className="sm:hidden">Vis</span>
             </TabsTrigger>
           </TabsList>
 
@@ -446,6 +459,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </TabsContent>
           <TabsContent value="projects" className="mt-4">
             <ProjectsTab />
+          </TabsContent>
+          <TabsContent value="visitors" className="mt-4">
+            <VisitorsTab />
           </TabsContent>
         </Tabs>
       </main>
@@ -1114,5 +1130,287 @@ function ProjectsTab() {
         }}
       />
     </Card>
+  );
+}
+
+// --- Visitors tab: top countries + devices ---
+interface VisitorStats {
+  totals: {
+    totalVisits: number;
+    uniqueVisitors: number;
+    visits24h: number;
+    visits7d: number;
+    unique24h: number;
+    unique7d: number;
+  };
+  topCountries: Array<{ country: string; countryName: string; visits: number; unique: number }>;
+  topDevices: Array<{ deviceType: string; visits: number; unique: number }>;
+  topOs: Array<{ os: string; visits: number; unique: number }>;
+  topBrowsers: Array<{ browser: string; visits: number; unique: number }>;
+}
+
+async function fetchVisitorStats(): Promise<VisitorStats> {
+  const res = await fetch("/api/visitors/stats", { cache: "no-store" });
+  if (!res.ok) throw new Error("No autorizado");
+  return res.json();
+}
+
+// Convert ISO 3166-1 alpha-2 country code to flag emoji.
+function countryFlag(code: string): string {
+  if (!code || code === "Unknown" || code === "LO") return "🌐";
+  const base = 0x1f1e6;
+  const chars = code.toUpperCase().split("");
+  if (chars.length !== 2 || !/^[A-Z]+$/.test(chars.join(""))) return "🌐";
+  return String.fromCodePoint(base + chars[0].charCodeAt(0) - 65) +
+         String.fromCodePoint(base + chars[1].charCodeAt(0) - 65);
+}
+
+// Pick an icon for the device type.
+function deviceIcon(deviceType: string) {
+  if (deviceType === "mobile") return Smartphone;
+  if (deviceType === "tablet") return Smartphone;
+  if (deviceType === "bot") return Globe;
+  return Monitor;
+}
+
+function VisitorsTab() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["visitor-stats"],
+    queryFn: fetchVisitorStats,
+    staleTime: 30_000,
+    retry: 0,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <Card className="border-border/60 bg-card/50">
+        <CardContent className="p-8 text-center text-sm text-muted-foreground">
+          No se pudieron cargar las estadísticas de visitantes.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const totals = [
+    {
+      label: "Visitas totales",
+      value: data.totals.totalVisits,
+      sub: `${data.totals.uniqueVisitors} únicos`,
+      icon: Eye,
+    },
+    {
+      label: "Últimas 24h",
+      value: data.totals.visits24h,
+      sub: `${data.totals.unique24h} únicos`,
+      icon: TrendingUp,
+    },
+    {
+      label: "Últimos 7 días",
+      value: data.totals.visits7d,
+      sub: `${data.totals.unique7d} únicos`,
+      icon: Users,
+    },
+    {
+      label: "Países",
+      value: data.topCountries.length,
+      sub: "distintos",
+      icon: Globe,
+    },
+  ];
+
+  const renderBarList = (
+    items: Array<{ label: string; sub?: string; value: number }>,
+    total: number,
+    icon?: React.ComponentType<{ className?: string }>,
+    accent: string = "from-primary to-primary/60",
+  ) => {
+    const max = Math.max(...items.map((i) => i.value), 1);
+    return (
+      <div className="space-y-3">
+        {items.length === 0 && (
+          <div className="rounded-lg border border-dashed border-border/60 p-6 text-center text-xs text-muted-foreground">
+            Sin datos todavía.
+          </div>
+        )}
+        {items.map((it, i) => {
+          const pct = (it.value / max) * 100;
+          const sharePct = total > 0 ? (it.value / total) * 100 : 0;
+          const Icon = icon;
+          return (
+            <div key={`${it.label}-${i}`} className="space-y-1">
+              <div className="flex items-center justify-between gap-2 text-xs">
+                <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
+                  {Icon && <Icon className="h-3.5 w-3.5 shrink-0" />}
+                  <span className="truncate font-medium text-foreground">
+                    {it.label}
+                  </span>
+                  {it.sub && (
+                    <span className="shrink-0 text-muted-foreground">
+                      · {it.sub}
+                    </span>
+                  )}
+                </span>
+                <span className="shrink-0 font-mono font-semibold text-foreground">
+                  {it.value}{" "}
+                  <span className="text-muted-foreground">
+                    ({sharePct.toFixed(1)}%)
+                  </span>
+                </span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.04 }}
+                  className={`h-full rounded-full bg-gradient-to-r ${accent}`}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const totalCountryVisits = data.topCountries.reduce((a, c) => a + c.visits, 0);
+  const totalDeviceVisits = data.topDevices.reduce((a, d) => a + d.visits, 0);
+  const totalOsVisits = data.topOs.reduce((a, o) => a + o.visits, 0);
+  const totalBrowserVisits = data.topBrowsers.reduce((a, b) => a + b.visits, 0);
+
+  return (
+    <div className="space-y-6">
+      {/* Totals */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {totals.map((t, i) => {
+          const Icon = t.icon;
+          return (
+            <motion.div
+              key={t.label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+            >
+              <Card className="relative overflow-hidden border-border/60 bg-card/50">
+                <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 opacity-50 blur-2xl" />
+                <CardContent className="relative p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-muted-foreground">{t.label}</div>
+                    <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary/15 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="mt-2 font-mono text-3xl font-bold">{t.value}</div>
+                  <div className="mt-1 text-[11px] text-muted-foreground">{t.sub}</div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Top countries */}
+        <Card className="overflow-hidden border-border/60 bg-card/50">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <Globe className="h-4 w-4 text-primary" />
+              Países con más visitas
+            </div>
+            <div className="mt-4">
+              {renderBarList(
+                data.topCountries.map((c) => ({
+                  label: `${countryFlag(c.country)} ${c.countryName}`,
+                  sub: `${c.unique} únicos`,
+                  value: c.visits,
+                })),
+                totalCountryVisits,
+                undefined,
+                "from-emerald-500 to-teal-600",
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top devices */}
+        <Card className="overflow-hidden border-border/60 bg-card/50">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <Monitor className="h-4 w-4 text-primary" />
+              Dispositivos
+            </div>
+            <div className="mt-4">
+              {renderBarList(
+                data.topDevices.map((d) => ({
+                  label: d.deviceType === "Unknown" ? "Otro" : d.deviceType,
+                  sub: `${d.unique} únicos`,
+                  value: d.visits,
+                })),
+                totalDeviceVisits,
+                undefined,
+                "from-violet-500 to-purple-600",
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top OS */}
+        <Card className="overflow-hidden border-border/60 bg-card/50">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <Smartphone className="h-4 w-4 text-primary" />
+              Sistemas operativos
+            </div>
+            <div className="mt-4">
+              {renderBarList(
+                data.topOs.map((o) => ({
+                  label: o.os === "Unknown" ? "Otro" : o.os,
+                  sub: `${o.unique} únicos`,
+                  value: o.visits,
+                })),
+                totalOsVisits,
+                undefined,
+                "from-amber-500 to-orange-600",
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top browsers */}
+        <Card className="overflow-hidden border-border/60 bg-card/50">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <Eye className="h-4 w-4 text-primary" />
+              Navegadores
+            </div>
+            <div className="mt-4">
+              {renderBarList(
+                data.topBrowsers.map((b) => ({
+                  label: b.browser === "Unknown" ? "Otro" : b.browser,
+                  sub: `${b.unique} únicos`,
+                  value: b.visits,
+                })),
+                totalBrowserVisits,
+                undefined,
+                "from-cyan-500 to-blue-600",
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="rounded-xl border border-border/60 bg-card/30 p-4 text-xs text-muted-foreground">
+        <ShieldCheck className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
+        Privacidad: la IP se hashea con sal diaria (SHA-256) — nunca se guarda
+        la IP cruda. Solo se captura país, ciudad, dispositivo, OS y navegador.
+      </div>
+    </div>
   );
 }

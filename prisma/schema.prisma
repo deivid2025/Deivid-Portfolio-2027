@@ -31,6 +31,37 @@ model ViewEvent {
   @@index([createdAt])
 }
 
+/// Visitor tracking — captures country + device for each unique session.
+/// IP is hashed (not stored raw) for privacy. Country is resolved
+/// server-side from the X-Forwarded-For IP via a free IP geolocation API.
+/// Device type / browser / OS are parsed from the User-Agent header.
+model Visitor {
+  id           String   @id @default(cuid())
+  // SHA-256 of the IP + a daily salt. Lets us dedupe per day per IP without
+  // ever storing the raw IP.
+  ipHash       String   @unique
+  country      String   @default("Unknown") // ISO 3166-1 alpha-2 code, e.g. "PY", "AR", "US"
+  countryName  String   @default("Unknown") // human-readable, e.g. "Paraguay"
+  city         String   @default("Unknown")
+  region       String   @default("Unknown")
+  // Parsed from User-Agent at request time.
+  deviceType   String   @default("Unknown") // mobile | tablet | desktop | bot
+  os           String   @default("Unknown") // e.g. "Windows", "macOS", "Android", "iOS"
+  browser      String   @default("Unknown") // e.g. "Chrome", "Safari", "Firefox"
+  // Aggregate counters — updated on each visit.
+  visits       Int      @default(1)
+  lastSeenAt   DateTime @default(now())
+  firstSeenAt  DateTime @default(now())
+  // Per-day counter so the admin can show "visits in last 24h" / "last 7 days".
+  // Updated by incrementing visits + resetting lastSeenAt on each new visit.
+  createdAt    DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([country])
+  @@index([deviceType])
+  @@index([lastSeenAt])
+}
+
 /// Contact messages submitted through the contact form.
 model Message {
   id        String   @id @default(cuid())

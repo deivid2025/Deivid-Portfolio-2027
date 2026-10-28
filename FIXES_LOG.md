@@ -238,3 +238,32 @@ A esto se sumaba:
 - VLM confirmó: "302 ejercicios ilustrados, prescripción científica por objetivo, mapa muscular interactivo, 100% español LATAM" visibles en la card.
 
 ---
+
+## 2026-10-22 — Fix #6: Faltó agregar el link de GitHub del GymBro Trainer
+
+**Pedido del usuario (reciente):**
+"oye te di algunas ordenes"
+
+**Lo que pasó:**
+En el mensaje anterior el usuario pasó 2 URLs juntas:
+> "agrega esta app ahora : https://gymbrotraine.deividtech.cloud/ https://github.com/deivid2025/gymbrotraine... portada."
+
+Yo interpreté que solo había que agregar la app con la portada (screenshot). Me olvidé del segundo link (el repo de GitHub) que el usuario pasó como dato para incluir en la card del proyecto.
+
+**Fix aplicado:**
+1. **`Project` interface** (`src/lib/projects.ts`): agregué campo opcional `github?: string`.
+2. **GymBro Trainer entry**: `github: "https://github.com/deivid2025/gymbrotraine"`.
+3. **Prisma `ProjectRow` model**: agregué columna `github String?` (nullable para los otros 4 proyectos que no tienen repo público).
+4. **`bun run db:push`**: schema migrado + Prisma client regenerado.
+5. **`repo.ts` `ensureProjectSeeds`**: propaga `p.github ?? null` en upsert.
+6. **`repo.ts` `getProjectRows`**: expone `r.github ?? undefined` en la API response.
+7. **`project-modal.tsx` footer**: cuando `project.github` está seteado, rendero un botón "Ver código" outline con icono de Github entre el "Abrir proyecto" (primario) y "Compartir" (secundario). En desktop muestra icono + texto; en mobile es icon-only para ahorrar espacio horizontal.
+
+**Verificación:**
+- `GET /api/projects` ahora devuelve `github` solo para GymBro Trainer (los otros 4 quedan sin `github`, lo que es correcto — son repos privados o no aplicable).
+- Modal de GymBro: footer ahora tiene 4 botones (Abrir proyecto / Ver código / Compartir / Cerrar) + view count a la derecha en desktop.
+- Click en "Ver código" → abre https://github.com/deivid2025/gymbrotraine en nueva tab.
+
+**Lección anotada:** Cuando el usuario pasa múltiples URLs en un mismo mensaje, cada una suele ser un dato distinto para incorporar al proyecto. Si una URL es de GitHub, agregarla al campo `github` del proyecto para que se pueda "ver el código". Si el usuario dice "te di algunas órdenes", revisar el mensaje anterior con cuidado — probablemente hay URLs o instrucciones que pasé por alto.
+
+---

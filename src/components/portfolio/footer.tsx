@@ -120,12 +120,6 @@ export function Footer() {
           <div className="flex items-center gap-1.5">
             {t.footer.madeWith} <Heart className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
-          <Link
-            href="/admin"
-            className="text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground"
-          >
-            admin
-          </Link>
         </div>
       </div>
     </footer>

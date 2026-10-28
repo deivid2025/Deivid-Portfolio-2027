@@ -29,6 +29,10 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+# Copy the prisma CLI so we can run `prisma db push` on startup without
+# needing to download it (the standalone output only includes runtime
+# deps, not dev tools like the prisma CLI).
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 
 # Create data dir for SQLite
 RUN mkdir -p /app/data
@@ -39,5 +43,7 @@ EXPOSE 3000
 
 # Run prisma db push to apply schema changes (creates/migrates tables
 # like Visitor on a fresh DB or an existing one) before starting the
-# Next.js server. Idempotent — safe to run on every container start.
-CMD ["sh", "-c", "bunx prisma db push --accept-data-loss && bun server.js"]
+# Next.js server. Uses `;` instead of `&&` so even if the migration
+# fails (e.g. DB locked), the server still starts — we'd rather have a
+# running app with a stale schema than a 502.
+CMD ["sh", "-c", "bunx prisma db push --accept-data-loss --skip-generate 2>&1; bun server.js"]

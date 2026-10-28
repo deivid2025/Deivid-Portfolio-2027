@@ -37,4 +37,7 @@ ENV DATABASE_URL=file:/app/data/portfolio.db
 
 EXPOSE 3000
 
-CMD ["bun", "server.js"]
+# Run prisma db push to apply schema changes (creates/migrates tables
+# like Visitor on a fresh DB or an existing one) before starting the
+# Next.js server. Idempotent — safe to run on every container start.
+CMD ["sh", "-c", "bunx prisma db push --accept-data-loss && bun server.js"]

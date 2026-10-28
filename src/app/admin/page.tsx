@@ -26,6 +26,7 @@ import {
   Smartphone,
   Monitor,
   Users,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1066,7 +1067,7 @@ function deviceIcon(deviceType: string) {
 }
 
 function VisitorsTab() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch: refetchVisitorStats } = useQuery({
     queryKey: ["visitor-stats"],
     queryFn: fetchVisitorStats,
     staleTime: 30_000,
@@ -1179,17 +1180,56 @@ function VisitorsTab() {
 
   return (
     <div className="space-y-6">
-      {/* Header row: title + CSV export for backups */}
+      {/* Header row: title + CSV export/import for sync/backups */}
       <div className="flex items-center justify-between gap-3">
         <div className="text-sm font-semibold">Visitantes — país + dispositivo</div>
-        <a
-          href="/api/visitors/export"
-          className="inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-        >
-          <Download className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Descargar CSV</span>
-          <span className="sm:hidden">CSV</span>
-        </a>
+        <div className="flex items-center gap-2">
+          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground">
+            <Upload className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Importar CSV</span>
+            <span className="sm:hidden">Import</span>
+            <input
+              type="file"
+              accept=".csv,text/csv"
+              className="hidden"
+              onChange={async (e) => {
+                const f = e.target.files?.[0];
+                if (!f) return;
+                const fd = new FormData();
+                fd.append("file", f);
+                try {
+                  const r = await fetch("/api/visitors/import", {
+                    method: "POST",
+                    body: fd,
+                  });
+                  const data = await r.json();
+                  if (!r.ok) {
+                    toast.error(data.error ?? "No se pudo importar el CSV");
+                  } else {
+                    toast.success(
+                      `Importados ${data.imported} visitantes (${data.skipped} saltados)`,
+                    );
+                    // Force a refetch of the stats so the new data shows.
+                    void refetchVisitorStats();
+                  }
+                } catch {
+                  toast.error("Error de red al importar el CSV");
+                } finally {
+                  // Reset input so the same file can be uploaded again.
+                  e.target.value = "";
+                }
+              }}
+            />
+          </label>
+          <a
+            href="/api/visitors/export"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Descargar CSV</span>
+            <span className="sm:hidden">CSV</span>
+          </a>
+        </div>
       </div>
       {/* Totals */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

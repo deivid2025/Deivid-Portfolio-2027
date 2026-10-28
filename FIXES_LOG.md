@@ -267,3 +267,58 @@ Yo interpreté que solo había que agregar la app con la portada (screenshot). M
 **Lección anotada:** Cuando el usuario pasa múltiples URLs en un mismo mensaje, cada una suele ser un dato distinto para incorporar al proyecto. Si una URL es de GitHub, agregarla al campo `github` del proyecto para que se pueda "ver el código". Si el usuario dice "te di algunas órdenes", revisar el mensaje anterior con cuidado — probablemente hay URLs o instrucciones que pasé por alto.
 
 ---
+
+## 2026-10-28 — Fix #7: GitHub URL + Labs URL + email forwarding
+
+**Pedido del usuario:**
+"lo que no me has actualizado es mi redireccion de github es esta mi cuenta oficial: https://github.com/deivid2025/ en el footer ambos url cambiar por las mencionadas: https://labs.deividtech.cloud/ en portfolio colocar esta url ademas de eso como hacemos en el newsteller para que me envien directamente ami correo los mensajes que me van llegando o eso en el admin me llega todo verifica e informame como se esta manejando eso, sigue puliendo los detalles tecnicos"
+
+**Cambios aplicados:**
+
+### 1. GitHub URL → oficial
+| Antes | Ahora |
+|---|---|
+| `profile.github = "https://github.com/deividtech"` | `"https://github.com/deivid2025/"` |
+| `profile.githubUser = "deividtech"` | `"deivid2025"` |
+| `profile.socials[0].url = "https://github.com/davidgaray849"` | `"https://github.com/deivid2025/"` |
+
+### 2. Labs URL en portfolio
+- `profile.socials` agregué entrada: `{ label: "Labs", url: "https://labs.deividtech.cloud/", icon: "FlaskConical" }`
+- DynamicIcon map: nuevo icon `FlaskConical` (matraz de laboratorio) — combina con el concepto de "Labs".
+- Visible en el footer del portfolio en la columna "Sistemas" entre GitHub/Portfolio y PeelMe.
+
+### 3. Email forwarding (SMTP via nodemailer)
+**Estado actual (antes del fix):**
+- Formulario de contacto: persistía en DB (tabla `Message`) pero no mandaba email.
+- Newsletter: persistía en DB (tabla `Subscriber`) pero no notificaba.
+- Solo se veían en `/admin` → tab Mensajes / Subscribers.
+
+**Fix aplicado:**
+- `src/lib/email.ts` (nuevo): `forwardContactMessage()` y `forwardSubscriberNotification()` con SMTP configurable por env vars (`SMTP_HOST/PORT/USER/PASS/FROM/TO`). Degrada gracefully cuando no hay env vars — no-op silencioso, no rompe el sitio.
+- `src/app/api/contact/route.ts`: disparo `forwardContactMessage()` fire-and-forget (no awaited para no esperar la latencia SMTP). ReplyTo seteado al email del visitante → David hace Reply y le responde directo.
+- `src/app/api/subscribe/route.ts`: dispara `forwardSubscriberNotification()` solo cuando es nuevo (no en duplicados, para no spammear).
+- `src/app/api/admin/stats/route.ts`: devuelve `emailForwarding.configured + destination`.
+- `src/app/admin/page.tsx`: nuevo `EmailForwardingBanner` arriba del StatsRow:
+  - Verde cuando SMTP está configurado: "Forwarding de email activo — los mensajes del formulario de contacto y los nuevos suscriptores se envían a davidgaray849@gmail.com".
+  - Ámbar cuando no: instrucciones completas + template de `.env` + link a Google App Passwords.
+
+**Verificación:**
+- Footer: GitHub = `https://github.com/deivid2025/`, Labs = `https://labs.deividtech.cloud/`.
+- Admin banner: ámbar, con template de env vars + link a App Passwords.
+- POST /api/contact (sin SMTP configurado): 200, persiste en DB, forward no-op silencioso (no error).
+- POST /api/subscribe (email nuevo): 200, persiste, duplicate=false, forward no-op silencioso.
+- POST /api/subscribe (email existente): 200, persiste, duplicate=true, NO dispara forward (no spammear).
+
+**Para activar el email forwarding, David necesita agregar a `.env`:**
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=tu-correo@gmail.com
+SMTP_PASS=tu-app-password  # NO la password regular
+SMTP_FROM=Portfolio <tu-correo@gmail.com>  # opcional
+SMTP_TO=davidgaray849@gmail.com  # opcional
+```
+
+Para Gmail: hay que crear una App Password en https://myaccount.google.com/apppasswords (la password regular NO funciona por seguridad).
+
+---

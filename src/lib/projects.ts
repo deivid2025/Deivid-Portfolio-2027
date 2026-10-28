@@ -404,7 +404,7 @@ export const projects: Project[] = [
 export const profile = {
   name: "David Garay",
   brand: "Deivid Tech",
-  role: "Full-Stack Developer · Ciberseguridad · IA",
+  role: "Full-Stack Developer · Python · Ciberseguridad · IA",
   domain: "deividtech.cloud",
   email: "davidgaray849@gmail.com",
   github: "https://github.com/deivid2025/",
@@ -412,9 +412,9 @@ export const profile = {
   avatar: "/profile-photo.png",
   location: "Paraguay · Remoto",
   available: true,
-  bio: "Desde Paraguay desarrollo productos web y me meto en ciberseguridad. Kali Linux es lo mío. Empecé con Python y no paré. Me hice amigos en varios países gracias al código, tengo un compa en España con el que charlamos hace años. Me gusta compartir lo que aprendo y estoy abierto a nuevas oportunidades. Si tenés una idea o un problema, escribí y lo resolvemos.",
+  bio: "Desde Paraguay construyo productos web que reemplazan procesos manuales. Full-stack con Python, Next.js y PostgreSQL, con rama en ciberseguridad (Kali Linux + pentesting ofensivo). 5 sistemas en producción, IA aplicada en el día a día. Si tenés una idea, escribí.",
   longBio:
-    "Estudié programación con Python y de ahí salté al ecosistema web. Hoy trabajo con React, Next.js, TypeScript, Docker, PostgreSQL y Supabase. Pero no solo programo. También me dedico a la ciberseguridad y el hacking ético. Hice cursos de Kali Linux a nivel intermedio avanzado, hacking ético ofensivo en Red Team, configuración de firewalls y pentesting. Combino el desarrollo con la seguridad para que mis productos no solo funcionen sino que estén protegidos. Uso IA todos los días. ChatGPT, Claude, Cursor y Codex son parte de cómo trabajo. Soy una persona amigable y gracias a la programación conocí gente en varios países. Tengo un gran amigo en España con el que ya van muchos años de charlas y proyectos. Me encanta compartir lo que aprendo y siempre estoy dispuesto a charlar sobre ideas nuevas y oportunidades.",
+    "Empecé con Python y no paré. Hoy trabajo full-stack con Next.js, TypeScript, Docker, PostgreSQL y Supabase, y paralelamente hago ciberseguridad: Kali Linux intermedio-avanzado, hacking ético ofensivo en Red Team, pfSense firewalls y pentesting web (eWPT). Combino desarrollo + seguridad para que mis productos no solo funcionen, sino que estén protegidos. Uso IA todos los días: ChatGPT, Claude, Cursor y Codex como mis pares de programación. Tengo 5 sistemas en producción propios — DESPEGA!, Redline, FactuSheet, NotesApp Uchiha y GymBro Trainer. Soy de Paraguay, trabajo remoto, y gracias al código me hice amigos en varios países. Abierto a charlar sobre ideas nuevas.",
   stats: [
     { label: "Sistemas en producción", value: "5" },
     { label: "Líneas de código", value: "50k+" },
@@ -449,8 +449,7 @@ export const profile = {
   ],
   socials: [
     { label: "GitHub", url: "https://github.com/deivid2025/", icon: "Github" },
-    { label: "Portfolio", url: "https://deividtech.cloud", icon: "Globe" },
-    { label: "Labs", url: "https://labs.deividtech.cloud/", icon: "FlaskConical" },
+    { label: "Portfolio", url: "https://labs.deividtech.cloud/", icon: "Globe" },
     { label: "PeelMe", url: "https://peelme.deividtech.cloud/", icon: "Sticker" },
     { label: "Redline", url: "https://redline.deividtech.cloud/auth", icon: "Truck" },
     {

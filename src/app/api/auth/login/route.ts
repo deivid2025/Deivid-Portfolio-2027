@@ -21,12 +21,16 @@ export async function POST(req: Request) {
     );
   }
   const token = await mintToken();
+  const flags = adminCookie.flags;
+  const cookieParts = [
+    `${adminCookie.name}=${encodeURIComponent(token)}`,
+    "HttpOnly",
+    `Path=${flags.path}`,
+    `Max-Age=${adminCookie.maxAge}`,
+    `SameSite=${flags.sameSite}`,
+  ];
+  if (flags.secure) cookieParts.push("Secure");
   const res = NextResponse.json({ ok: true, role: "admin" });
-  res.headers.set(
-    "set-cookie",
-    `${adminCookie.name}=${encodeURIComponent(token)}; HttpOnly; Path=/; Max-Age=${adminCookie.maxAge}; SameSite=Lax${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
-    }`,
-  );
+  res.headers.set("set-cookie", cookieParts.join("; "));
   return res;
 }

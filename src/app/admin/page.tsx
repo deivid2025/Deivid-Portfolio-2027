@@ -251,133 +251,20 @@ async function deleteTestimonial(id: string): Promise<void> {
 }
 
 // --- Page shell ---
+// The middleware in src/middleware.ts blocks unauthed requests to /admin
+// and redirects them to /admin/login. So if we reach here, the user is
+// already authenticated (the cookie has been verified server-side).
 export default function AdminPage() {
   return (
     <QueryProvider>
-      <AdminPageInner />
+      <AdminDashboard
+        onLogout={async () => {
+          await doLogout();
+          // Hard redirect to the login page so the middleware re-evaluates.
+          window.location.href = "/admin/login";
+        }}
+      />
     </QueryProvider>
-  );
-}
-
-function AdminPageInner() {
-  const [authed, setAuthed] = React.useState<boolean | null>(null);
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState<string | null>(null);
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    checkAuth().then(setAuthed).catch(() => setAuthed(false));
-  }, []);
-
-  if (authed === null) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  if (!authed) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-sm"
-        >
-          <Card className="overflow-hidden border-border/60">
-            <div className="relative h-24 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent">
-              <div className="absolute inset-0 bg-grid opacity-25 mix-blend-overlay" />
-              <div className="absolute bottom-3 left-5 flex items-center gap-2">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg">
-                  <Lock className="h-4 w-4" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">Admin</div>
-                  <div className="text-xs text-muted-foreground">deivid.tech</div>
-                </div>
-              </div>
-            </div>
-            <CardContent className="space-y-4 p-6">
-              <div>
-                <h1 className="text-xl font-bold">Acceso administrador</h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Ingresá la contraseña para gestionar mensajes, updates y
-                  testimonios.
-                </p>
-              </div>
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  setLoading(true);
-                  setError(null);
-                  const ok = await doLogin(password);
-                  setLoading(false);
-                  if (!ok) {
-                    setError("Contraseña incorrecta");
-                    return;
-                  }
-                  setAuthed(true);
-                }}
-                className="space-y-3"
-              >
-                <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-xs">
-                    Contraseña
-                  </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="h-11 rounded-xl"
-                    autoFocus
-                    required
-                  />
-                </div>
-                {error && <p className="text-xs text-destructive">{error}</p>}
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="h-11 w-full rounded-xl"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Entrando…
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="mr-2 h-4 w-4" />
-                      Entrar
-                    </>
-                  )}
-                </Button>
-              </form>
-              <div className="pt-2 text-center">
-                <Link
-                  href="/"
-                  className="text-xs text-muted-foreground hover:text-foreground"
-                >
-                  ← Volver al portfolio
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
-
-  return (
-    <AdminDashboard
-      onLogout={async () => {
-        await doLogout();
-        setAuthed(false);
-      }}
-    />
   );
 }
 
@@ -1292,6 +1179,18 @@ function VisitorsTab() {
 
   return (
     <div className="space-y-6">
+      {/* Header row: title + CSV export for backups */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-sm font-semibold">Visitantes — país + dispositivo</div>
+        <a
+          href="/api/visitors/export"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
+        >
+          <Download className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Descargar CSV</span>
+          <span className="sm:hidden">CSV</span>
+        </a>
+      </div>
       {/* Totals */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {totals.map((t, i) => {

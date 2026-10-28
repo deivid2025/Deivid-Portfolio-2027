@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin, unauthorizedResponse } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { isEmailForwardingConfigured } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -34,5 +35,11 @@ export async function GET(req: Request) {
     },
     recentMessages,
     projectViews,
+    // Lets the admin UI show a banner explaining how to turn on email
+    // forwarding (SMTP env vars) when it's not yet configured.
+    emailForwarding: {
+      configured: isEmailForwardingConfigured(),
+      destination: process.env.SMTP_TO?.trim() || "davidgaray849@gmail.com",
+    },
   });
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { addSubscriber } from "@/lib/repo";
+import { forwardSubscriberNotification } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,13 @@ export async function POST(req: Request) {
   }
   try {
     const result = await addSubscriber(email);
+    // Best-effort email notification to David when a NEW subscriber
+    // joins (skip notification for duplicates — they're already subscribed).
+    if (!result.duplicate) {
+      void forwardSubscriberNotification({ email }).catch((err) => {
+        console.error("[subscribe] email notification threw:", err);
+      });
+    }
     return NextResponse.json({
       ok: true,
       duplicate: result.duplicate ?? false,

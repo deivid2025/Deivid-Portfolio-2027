@@ -407,8 +407,8 @@ export const profile = {
   role: "Full-Stack Developer · Ciberseguridad · IA",
   domain: "deividtech.cloud",
   email: "davidgaray849@gmail.com",
-  github: "https://github.com/deividtech",
-  githubUser: "deividtech",
+  github: "https://github.com/deivid2025/",
+  githubUser: "deivid2025",
   avatar: "/profile-photo.png",
   location: "Paraguay · Remoto",
   available: true,
@@ -448,8 +448,9 @@ export const profile = {
     },
   ],
   socials: [
-    { label: "GitHub", url: "https://github.com/davidgaray849", icon: "Github" },
+    { label: "GitHub", url: "https://github.com/deivid2025/", icon: "Github" },
     { label: "Portfolio", url: "https://deividtech.cloud", icon: "Globe" },
+    { label: "Labs", url: "https://labs.deividtech.cloud/", icon: "FlaskConical" },
     { label: "PeelMe", url: "https://peelme.deividtech.cloud/", icon: "Sticker" },
     { label: "Redline", url: "https://redline.deividtech.cloud/auth", icon: "Truck" },
     {

@@ -15,6 +15,7 @@ import {
   Github,
   ShieldCheck,
   Dumbbell,
+  FlaskConical,
   type LucideIcon,
 } from "lucide-react";
 
@@ -32,6 +33,7 @@ const MAP: Record<string, LucideIcon> = {
   Github,
   ShieldCheck,
   Dumbbell,
+  FlaskConical,
 };
 
 export function DynamicIcon({

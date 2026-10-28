@@ -157,6 +157,10 @@ interface StatsData {
     createdAt: string;
   }>;
   projectViews: Array<{ slug: string; views: number }>;
+  emailForwarding?: {
+    configured: boolean;
+    destination: string;
+  };
 }
 
 interface MessageItem {
@@ -417,6 +421,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <EmailForwardingBanner />
         <StatsRow />
 
         <Tabs defaultValue="messages" className="mt-6">
@@ -1411,6 +1416,74 @@ function VisitorsTab() {
         Privacidad: la IP se hashea con sal diaria (SHA-256) — nunca se guarda
         la IP cruda. Solo se captura país, ciudad, dispositivo, OS y navegador.
       </div>
+    </div>
+  );
+}
+
+// --- Email forwarding banner ---
+// Shows a small status banner above the stats row so David knows whether
+// messages from the contact form + new-subscriber notifications are being
+// emailed directly to his inbox (SMTP configured) or only persisted to the
+// DB (visible in /admin but no email forwarding yet).
+function EmailForwardingBanner() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: fetchStats,
+    staleTime: 30_000,
+    retry: 0,
+  });
+
+  if (isLoading || !data?.emailForwarding) return null;
+
+  const ef = data.emailForwarding;
+  if (ef.configured) {
+    return (
+      <div className="mb-6 flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-600 dark:text-emerald-400">
+        <Mail className="h-3.5 w-3.5 shrink-0" />
+        <span className="font-medium">Forwarding de email activo</span>
+        <span className="text-emerald-600/70 dark:text-emerald-400/70">
+          — los mensajes del formulario de contacto y los nuevos suscriptores
+          se envían a <span className="font-mono">{ef.destination}</span>.
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs">
+      <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+        <Mail className="h-3.5 w-3.5 shrink-0" />
+        <span className="font-medium">
+          Forwarding de email desactivado
+        </span>
+      </div>
+      <p className="mt-1.5 text-amber-700/80 dark:text-amber-300/80">
+        Los mensajes del formulario de contacto y los nuevos suscriptores
+        se guardan en la DB y se ven en este panel, pero <strong>no te
+        llegan por email</strong>. Para activar el forwarding, agregá estas
+        variables de entorno en <span className="font-mono">.env</span>:
+      </p>
+      <pre className="mt-2 overflow-x-auto rounded-lg bg-amber-950/30 p-2.5 font-mono text-[10px] text-amber-200/90">
+{`SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USER=tu-correo@gmail.com
+SMTP_PASS=tu-app-password  # NO la password regular
+SMTP_FROM=Portfolio <tu-correo@gmail.com>  # opcional
+SMTP_TO=davidgaray849@gmail.com  # opcional`}
+      </pre>
+      <p className="mt-2 text-[11px] text-amber-700/70 dark:text-amber-300/70">
+        Para Gmail: creá una App Password en{" "}
+        <a
+          href="https://myaccount.google.com/apppasswords"
+          target="_blank"
+          rel="noreferrer"
+          className="font-medium text-amber-600 underline underline-offset-2 hover:text-amber-500 dark:text-amber-400 dark:hover:text-amber-300"
+        >
+          Cuentas de Google → App Passwords
+        </a>
+        . Otras opciones: Outlook (smtp.office365.com:587), ProtonMail Bridge,
+        o cualquier SMTP propio.
+      </p>
     </div>
   );
 }

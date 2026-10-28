@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createMessage } from "@/lib/repo";
+import { forwardContactMessage } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,15 @@ export async function POST(req: Request) {
     // Still return ok so the UI can show success — we don't want to leak
     // DB errors to the visitor. The ticket is the correlation id.
   }
+
+  // Best-effort email forward to David's inbox. SMTP transport is loaded
+  // lazily and cached. If SMTP env vars aren't set, this no-ops and the
+  // message stays only in the DB (visible in /admin → Mensajes).
+  // Not awaited to keep the response fast — email delivery can take 1-3s
+  // depending on the SMTP provider, and we don't want the visitor to wait.
+  void forwardContactMessage({ name, email, message, ticket }).catch((err) => {
+    console.error("[contact] email forward threw:", err);
+  });
 
   return NextResponse.json({
     ok: true,

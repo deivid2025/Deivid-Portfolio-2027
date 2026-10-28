@@ -27,6 +27,9 @@ export interface Project {
   status: ProjectStatus;
   year: string;
   url: string;
+  /** Optional link to the public GitHub repo (shows a "Ver código" button
+   *  in the project modal footer when set). */
+  github?: string;
   accent: string; // tailwind gradient classes for the cover art
   icon: string; // lucide icon name resolved on the client
   screenshot: string; // path under /public/screenshots
@@ -331,6 +334,7 @@ export const projects: Project[] = [
     status: "live",
     year: "2026",
     url: "https://gymbrotraine.deividtech.cloud/",
+    github: "https://github.com/deivid2025/gymbrotraine",
     accent: "from-zinc-700 via-zinc-800 to-zinc-900",
     icon: "Dumbbell",
     screenshot: "/screenshots/gymbro-trainer.png",

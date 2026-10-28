@@ -119,6 +119,7 @@ model ProjectRow {
   status        String   // live | beta | maintenance
   year          String
   url           String
+  github        String?  // optional link to the public GitHub repo
   accent        String
   icon          String
   screenshot    String

@@ -16,6 +16,7 @@ import {
   Check,
   Link2,
   X,
+  Github,
 } from "lucide-react";
 import {
   Dialog,
@@ -322,6 +323,20 @@ export function ProjectModal({
                     <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" />
                   </Link>
                 </Button>
+                {/* "Ver código": shown only when the project has a public GitHub repo */}
+                {project.github && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="h-10 shrink-0 rounded-full px-3 sm:h-9 sm:px-4"
+                  >
+                    <Link href={project.github} target="_blank" rel="noreferrer">
+                      <Github className="h-3.5 w-3.5" />
+                      <span className="ml-1.5 hidden sm:inline">Ver código</span>
+                    </Link>
+                  </Button>
+                )}
                 {/* Secondary actions: compact icons on mobile, with text on sm+ */}
                 <Button
                   variant="outline"
